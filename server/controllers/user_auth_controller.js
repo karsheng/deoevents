@@ -16,8 +16,19 @@ module.exports = {
 	},
 
 	signup(req, res, next) {
-		const email = req.body.email;
-		const password = req.body.password;
+		const {
+			name, 
+			email, 
+			password,
+			gender,
+			address1,
+			address2,
+			address3,
+			city,
+			postcode,
+			country,
+			interests
+		} = req.body;
 
 		if (!email || !password) {
 			return res.status(422).send({ error: 'You must provide email and password' })
@@ -36,8 +47,16 @@ module.exports = {
 
 			// if a user with email does not exit, create and save user record
 			const user = new User({
-				email: email,
-				password: password
+				email,
+				password,
+				gender,
+				address1,
+				address2,
+				address3,
+				city,
+				postcode,
+				country,
+				interests
 			});
 
 			user.save(function(err) {
