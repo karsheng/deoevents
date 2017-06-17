@@ -1,4 +1,3 @@
-const Category = require('../models/category');
 const User = require('../models/user');
 const config = require('../config');
 const jwt = require('jwt-simple');

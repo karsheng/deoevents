@@ -1,5 +1,6 @@
 const UserAuthController = require('./controllers/user_auth_controller');
-const AdminController = require('./controllers/admin_auth_controller');
+const AdminAuthController = require('./controllers/admin_auth_controller');
+const AdminController = require('./controllers/admin_controller');
 const passportService = require('./services/passport');
 const passport = require('passport');
 
@@ -18,6 +19,7 @@ module.exports = function(app) {
 		res.send("test success!");   
 	});
 
-	app.post('/admin/create', AdminController.createAdmin);
-	app.post('/admin/signin', adminRequireSignin, AdminController.signin);
+	app.post('/admin/create', AdminAuthController.createAdmin);
+	app.post('/admin/signin', adminRequireSignin, AdminAuthController.signin);
+	app.post('/admin/category', adminRequireAuth, AdminController.createCategory);
 };

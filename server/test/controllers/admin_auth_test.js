@@ -2,10 +2,10 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../../app');
 
-describe('Admin Controller', function(done) {
+describe('Admin Auth Controller', function(done) {
 	var adminToken;
 
-	it('/POST to /admin/create', done => {
+	it('/POST to /admin/create creates an admin', done => {
 		request(app)
 			.post('/admin/create')
 			.send({
@@ -18,7 +18,7 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('/POST to /admin/signin', done => {
+	it('/POST to /admin/signin signs in an admin', done => {
 		request(app)
 			.post('/admin/create')
 			.send({
