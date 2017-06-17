@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
+const CategorySchema = require('./category');
 
 const UserSchema = new Schema({
 	name: { type: String },
@@ -13,7 +14,14 @@ const UserSchema = new Schema({
 	city: { type: String },
 	postcode: { type: String },
 	country: { type: String },
-	interests: [{ type: String }]
+	interests: [{
+		type: Schema.Types.ObjectId,
+		ref: 'category'
+	}],
+	admin: {
+		type: Boolean,
+		default: false
+	}
 });
 
 // On Save Hook, encrypt password

@@ -51,6 +51,46 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
 	});
 });
 
+// admin local strategy
+const adminLocalOptions = { usernameField: 'email' }
+const adminLocalLogin = new LocalStrategy(adminLocalOptions, function(email, password, done) {
+	User.findOne({ email: email }, function(err, user) {
+		if (err) { return done(err); }
+		if (!user) { return done(null, false); }
+		if (!user.admin) { return done(null, false); }		
+		
+		// compare passwords - is 'password' equal to user password
+		user.comparePassword(password, function(err, isMatch) {
+			if (err) { return done(err); }
+			if (!isMatch) { return done(null, false); }
+
+			return done(null, user);
+		});
+	});
+
+});
+
+// Setup option for JWT Strategy
+const adminJwtOptions = {
+	jwtFromRequest: ExtractJwt.fromHeader('admin-authorization'),
+	secretOrKey: config.secret
+};
+
+// Create JWT strategy
+const adminJwtLogin = new JwtStrategy(adminJwtOptions, function(payload, done){
+	User.findById(payload.sub, function(err, user) {
+		if (err) { return done(err, false); } 
+
+		if (user && user.admin) {
+			done(null, user);
+		} else {
+			done(null, false);
+		}
+	});
+});
+
 // Tell passport to use this strategy
-passport.use(jwtLogin);
-passport.use(localLogin);
+passport.use('user-jwt', jwtLogin);
+passport.use('user-local', localLogin);
+passport.use('admin-jwt', adminJwtLogin);
+passport.use('admin-local', adminLocalLogin);

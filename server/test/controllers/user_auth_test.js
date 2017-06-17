@@ -16,8 +16,7 @@ describe('User Auth Controller', function(done){
 				address1: '16, The Breezeway',
 				address2: 'Desa Parkcity',
 				city: 'Kuala Lumpur',
-				postcode: '52200',
-				interests: ['10k', 'half', 'full']
+				postcode: '52200'
 			})
 			.end((err, res) => {
 				assert(res.body.token);
@@ -30,20 +29,19 @@ describe('User Auth Controller', function(done){
 			.post('/signup')
 			.send({
 				name: 'Lee Kar Sheng',
-				email: 'karshenglee@gmail.com',
+				email: 'karsheng_88@hotmail.com',
 				password: 'qwerty123',
 				gender: true,
 				address1: '16, The Breezeway',
 				address2: 'Desa Parkcity',
 				city: 'Kuala Lumpur',
-				postcode: '52200',
-				interests: ['10k', 'half', 'full']
+				postcode: '52200'
 			})
 			.end((err, res) => {
 				request(app)
 					.post('/signin')			
 					.send({
-						email: 'karshenglee@gmail.com',
+						email: 'karsheng_88@hotmail.com',
 						password: 'qwerty123'
 					})
 					.end((err, res) => {
