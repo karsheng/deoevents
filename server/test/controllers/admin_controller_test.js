@@ -3,20 +3,16 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../../app');
 const Category = mongoose.model('category');
+const createAdmin = require('../../helper/create_admin_helper');
 
 describe('Admin Controller', function(done) {
 	this.timeout(15000);
 	var adminToken;
 
 	beforeEach(done => {
-		request(app)
-			.post('/admin/create')
-			.send({
-				email: 'karshenglee@gmail.com',
-				password: 'qwerty123'
-			})
-			.end((err, res) => {
-				adminToken = res.body.token;
+		createAdmin('karshenglee@gmail.com', 'qwerty123')
+			.then(token => {
+				adminToken = token;
 				done();
 			});
 	});
