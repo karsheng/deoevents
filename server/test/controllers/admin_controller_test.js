@@ -7,6 +7,7 @@ const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
 const faker = require('faker');
 const Event = mongoose.model('event');
+const Meal = mongoose.model('meal');
 
 describe('Admin Controller', function(done) {
 	this.timeout(15000);
@@ -69,6 +70,26 @@ describe('Admin Controller', function(done) {
 						assert(event.lat === 3.1862);
 						done();
 					});
+			});
+	});
+
+	it('POST to /admin/meal creates a meal', done => {
+		request(app)
+			.post('/admin/meal')
+			.set('admin-authorization', adminToken)
+			.send({
+				name: 'Food 1',
+				price: 29.9,
+				description: 'The best food ever',
+				imageUrl: faker.image.food()
+			})
+			.end((err, res) => {
+				Meal.findOne({ name: 'Food 1' })
+				.then(food => {
+					assert(food.price === 29.9);
+					assert(food.description === 'The best food ever');
+					done();
+				});
 			});
 	});
 });
