@@ -19,9 +19,13 @@ const RegistrationSchema = new Schema(
 			type: Boolean,
 			default: false
 		},
-		orders: {
+		meal: [{
 			type: Schema.Types.ObjectId,
-			ref: 'orders'
+			ref: 'meal'
+		}],
+		quantity: {
+			type: Number,
+			default: 0
 		}
 	},
 	{ timestamps: { createdAt: 'timeRegistered' } }

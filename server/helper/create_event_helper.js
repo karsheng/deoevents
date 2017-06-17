@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 
 
-module.exports = (token, name, datetime, address, lat, lng, description, imageUrl, categories) => {
+module.exports = (token, name, datetime, address, lat, lng, description, imageUrl, categories, meals) => {
 	return new Promise((resolve, reject) => {
 		request(app)
 			.post('/admin/event')
@@ -15,7 +15,8 @@ module.exports = (token, name, datetime, address, lat, lng, description, imageUr
 				lng,
 				description,
 				imageUrl,
-				categories
+				categories,
+				meals
 			})
 			.end((err, res) => {
 				resolve(res.body);
