@@ -61,7 +61,7 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it.only('/POST to /admin/event creates a new event', done => {
+	it('/POST to /admin/event creates a new event', done => {
 		request(app)
 			.post('/admin/event')
 			.set('admin-authorization', adminToken)
@@ -78,11 +78,12 @@ describe('Admin Controller', function(done) {
 			})
 			.end((err, res) => {
 				Event.findOne({ name: 'Event 1'})
+					.populate({ path: 'meals', ref: 'meal' })
 					.then(event => {
-						console.log(event);
 						assert(event.name === 'Event 1');
 						assert(event.address === 'Desa Parkcity');
 						assert(event.lat === 3.1862);
+						assert(event.meals[0].name === 'Food 1');
 						done();
 					});
 			});
@@ -93,13 +94,13 @@ describe('Admin Controller', function(done) {
 			.post('/admin/meal')
 			.set('admin-authorization', adminToken)
 			.send({
-				name: 'Food 1',
+				name: 'Special Food',
 				price: 29.9,
 				description: 'The best food ever',
 				imageUrl: faker.image.food()
 			})
 			.end((err, res) => {
-				Meal.findOne({ name: 'Food 1' })
+				Meal.findOne({ name: 'Special Food' })
 				.then(food => {
 					assert(food.price === 29.9);
 					assert(food.description === 'The best food ever');
