@@ -22,4 +22,5 @@ module.exports = function(app) {
 	app.post('/admin/create', AdminAuthController.createAdmin);
 	app.post('/admin/signin', adminRequireSignin, AdminAuthController.signin);
 	app.post('/admin/category', adminRequireAuth, AdminController.createCategory);
+	app.post('/admin/event', adminRequireAuth, AdminController.createEvent);
 };
