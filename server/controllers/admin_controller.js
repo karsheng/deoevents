@@ -29,7 +29,8 @@ module.exports = {
 			lng,
 			description,
 			imageUrl,
-			categories
+			categories,
+			meals
 		} = req.body;
 
 		const event = new Event({
@@ -40,7 +41,8 @@ module.exports = {
 			lng,
 			description,
 			imageUrl,
-			categories			
+			categories,
+			meals
 		});
 
 		event.save()

@@ -12,6 +12,10 @@ const EventSchema = new Schema({
 	categories: [{
 		type: Schema.Types.ObjectId,
 		ref: 'category'
+	}],
+	meals: [{
+		type: Schema.Types.ObjectId,
+		ref: 'meal'
 	}]
 });
 

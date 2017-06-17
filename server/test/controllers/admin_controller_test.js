@@ -5,14 +5,16 @@ const app = require('../../app');
 const Category = mongoose.model('category');
 const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
+const createMeal = require('../../helper/create_meal_helper');
 const faker = require('faker');
 const Event = mongoose.model('event');
 const Meal = mongoose.model('meal');
 
 describe('Admin Controller', function(done) {
-	this.timeout(15000);
+	this.timeout(20000);
 	var adminToken;
 	var cat1, cat2, cat3, cat4;
+	var meal1, meal2, meal3;
 
 	beforeEach(done => {
 		createAdmin('karshenglee@gmail.com', 'qwerty123')
@@ -29,7 +31,18 @@ describe('Admin Controller', function(done) {
 				cat2 = categories[1];
 				cat3 = categories[2];
 				cat4 = categories[3];
-				done();
+
+				Promise.all([
+					createMeal(adminToken, 'Food 1', 11.0, faker.lorem.paragraph(), faker.image.food()),
+					createMeal(adminToken, 'Food 2', 22.0, faker.lorem.paragraph(), faker.image.food()),
+					createMeal(adminToken, 'Food 3', 33.0, faker.lorem.paragraph(), faker.image.food())
+				])			
+				.then(meals => {
+					meal1 = meals[0];
+					meal2 = meals[1];
+					meal3 = meals[2];
+					done();
+				});
 			});
 		});
 	});
@@ -48,7 +61,7 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('/POST to /admin/event creates a new event', done => {
+	it.only('/POST to /admin/event creates a new event', done => {
 		request(app)
 			.post('/admin/event')
 			.set('admin-authorization', adminToken)
@@ -60,11 +73,13 @@ describe('Admin Controller', function(done) {
 				lng: 101.6299,
 				description: faker.lorem.paragraph(),
 				imageUrl: faker.image.imageUrl(),
-				categories: [cat1, cat2, cat3, cat4]
+				categories: [cat1, cat2, cat3, cat4],
+				meals: [meal1, meal2, meal3]
 			})
 			.end((err, res) => {
 				Event.findOne({ name: 'Event 1'})
 					.then(event => {
+						console.log(event);
 						assert(event.name === 'Event 1');
 						assert(event.address === 'Desa Parkcity');
 						assert(event.lat === 3.1862);
