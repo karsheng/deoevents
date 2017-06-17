@@ -47,6 +47,7 @@ module.exports = {
 
 			// if a user with email does not exit, create and save user record
 			const user = new User({
+				name,
 				email,
 				password,
 				gender,
