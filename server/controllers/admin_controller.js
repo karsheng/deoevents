@@ -16,6 +16,17 @@ module.exports = {
 			.then(cat => res.send(cat))
 			.catch(next);
 	},
+	deleteCategory(req, res, next) {
+		if (!req.user.admin) {
+			return res.status(403).send({ error: 'You are not allowed to do that.' });
+		}
+
+		const { category_id } = req.params;
+
+		Category.findByIdAndRemove(category_id)
+			.then(removedCat => res.json(removedCat))
+			.catch(next);
+	},
 	createEvent(req, res, next) {
 		if (!req.user.admin) {
 			return res.status(403).send({ error: 'You are not allowed to do that.' });

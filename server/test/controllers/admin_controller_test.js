@@ -77,6 +77,19 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
+	it('DELETE to /admin/category/:category_id removes a category', done => {
+		request(app)
+			.delete(`/admin/category/${cat1._id}`)
+			.set('admin-authorization', adminToken)
+			.end((err, res) => {
+				Category.findOne({ name: '5km' })
+					.then(cat => {
+						assert(cat === null);
+						done();
+					});
+			});
+	});
+
 	it('/POST to /admin/event creates a new event', done => {
 		request(app)
 			.post('/admin/event')
