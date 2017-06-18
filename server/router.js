@@ -32,6 +32,7 @@ module.exports = function(app) {
 
 	app.post('/admin/event', adminRequireAuth, AdminController.createEvent);
 	app.put('/admin/event/:event_id', adminRequireAuth, AdminController.updateEvent);
+	app.delete('/admin/event/:event_id', adminRequireAuth, AdminController.deleteEvent);
 	
 	app.post('/admin/meal', adminRequireAuth, AdminController.createMeal);
 };

@@ -134,6 +134,19 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
+	it('DELETE to /admin/event/:event_id removes the event', done => {
+		request(app)
+			.delete(`/admin/event/${event._id}`)
+			.set('admin-authorization', adminToken)
+			.end((err, res) => {
+				Event.findOne({ name: 'Test Event'})
+					.then(e => {
+						assert(e === null);
+						done();
+					});
+			});
+	});
+
 	it('POST to /admin/meal creates a meal', done => {
 		request(app)
 			.post('/admin/meal')

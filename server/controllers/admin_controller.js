@@ -89,6 +89,17 @@ module.exports = {
 		})
 		.catch(next);
 	},
+	deleteEvent(req, res, next) {
+		if (!req.user.admin) {
+			return res.status(403).send({ error: 'You are not allowed to do that.' });
+		}
+
+		const { event_id } = req.params;
+		
+		Event.findByIdAndRemove(event_id)
+			.then(removedEvent => res.send(removedEvent))
+			.catch(next);
+	},
 	createMeal(req, res, next) {
 		if (!req.user.admin) {
 			return res.status(403).send({ error: 'You are not allowed to do that.' });
