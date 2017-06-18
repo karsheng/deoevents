@@ -75,7 +75,7 @@ describe('Public Controller', function(done) {
 		});
 	});
 
-	it.only('GET to /event/:event_id returns event info', done => {
+	it('GET to /event/:event_id returns event info', done => {
 		request(app)
 			.get(`/event/${event1._id}`)
 			.end((err, res) => {

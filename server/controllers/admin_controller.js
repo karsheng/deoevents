@@ -49,6 +49,46 @@ module.exports = {
 			.then(e => res.json(e))
 			.catch(next);
 	},
+	updateEvent(req, res, next) {
+		if (!req.user.admin) {
+			return res.status(403).send({ error: 'You are not allowed to do that.' });
+		}
+
+		const { event_id } = req.params;
+
+		const { 
+			name,
+			datetime,
+			address,
+			lat,
+			lng,
+			description,
+			imageUrl,
+			categories,
+			meals
+		} = req.body;
+
+		Event.findByIdAndUpdate(event_id, 
+			{
+				name,
+				datetime,
+				address,
+				lat,
+				lng,
+				description,
+				imageUrl,
+				categories,
+				meals
+			},
+			{
+				new: true
+			}
+		)
+		.then(returnedEvent => {
+			res.json(returnedEvent);
+		})
+		.catch(next);
+	},
 	createMeal(req, res, next) {
 		if (!req.user.admin) {
 			return res.status(403).send({ error: 'You are not allowed to do that.' });

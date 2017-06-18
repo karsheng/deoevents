@@ -6,6 +6,7 @@ const Category = mongoose.model('category');
 const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
 const createMeal = require('../../helper/create_meal_helper');
+const createEvent = require('../../helper/create_event_helper');
 const faker = require('faker');
 const Event = mongoose.model('event');
 const Meal = mongoose.model('meal');
@@ -15,6 +16,7 @@ describe('Admin Controller', function(done) {
 	var adminToken;
 	var cat1, cat2, cat3, cat4;
 	var meal1, meal2, meal3;
+	var event;
 
 	beforeEach(done => {
 		createAdmin('karshenglee@gmail.com', 'qwerty123')
@@ -41,7 +43,21 @@ describe('Admin Controller', function(done) {
 					meal1 = meals[0];
 					meal2 = meals[1];
 					meal3 = meals[2];
-					done();
+					createEvent(
+						adminToken,
+						'Test Event',
+						new Date().getTime(),
+						'Test Location',
+						3.123,
+						101.123,
+						faker.lorem.paragraphs(),
+						faker.image.imageUrl(),
+						[cat1, cat2, cat3, cat4],
+						[meal1, meal2, meal3]
+					).then(e => {
+						event = e;
+						done();
+					});
 				});
 			});
 		});
@@ -86,6 +102,35 @@ describe('Admin Controller', function(done) {
 						assert(event.meals[0].name === 'Food 1');
 						done();
 					});
+			});
+	});
+
+	it('PUT to /admin/event/:event_id updates the event', done => {
+		request(app)
+			.put(`/admin/event/${event._id}`)
+			.set('admin-authorization', adminToken)
+			.send({
+				name: 'Changed Event Name',
+				datetime: new Date().getTime(),
+				address: 'Changed Address',
+				lat: 3.9,
+				lng: 101.9,
+				description: 'Changed Description',
+				imageUrl: '/changedurl/image.jpg',
+				categories: [cat1, cat2],
+				meals: [meal1, meal2]
+			})
+			.end((err, res) => {
+				Event.findOne({ name: 'Changed Event Name'})
+				.then(e => {
+					assert(e.lat === 3.9);
+					assert(e.lng === 101.9);
+					assert(e.description === 'Changed Description');
+					assert(e.imageUrl === '/changedurl/image.jpg');
+					assert(e.categories.length === 2);
+					assert(e.meals.length === 2);
+					done();
+				})
 			});
 	});
 

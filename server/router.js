@@ -18,7 +18,8 @@ module.exports = function(app) {
 
 	app.post('/signin', requireSignin, UserAuthController.signin); 
 	app.post('/signup', UserAuthController.signup);
-	app.post('/meal/order', requireAuth, UserController.placeMealOrder)
+	app.post('/meal/order', requireAuth, UserController.placeMealOrder);
+
 	app.post('/event/register', requireAuth, UserController.registerForEvent);
 
 	app.get('/test', function(req, res) {
@@ -28,6 +29,9 @@ module.exports = function(app) {
 	app.post('/admin/create', AdminAuthController.createAdmin);
 	app.post('/admin/signin', adminRequireSignin, AdminAuthController.signin);
 	app.post('/admin/category', adminRequireAuth, AdminController.createCategory);
+
 	app.post('/admin/event', adminRequireAuth, AdminController.createEvent);
+	app.put('/admin/event/:event_id', adminRequireAuth, AdminController.updateEvent);
+	
 	app.post('/admin/meal', adminRequireAuth, AdminController.createMeal);
 };
