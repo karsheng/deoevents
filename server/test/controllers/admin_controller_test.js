@@ -63,6 +63,16 @@ describe('Admin Controller', function(done) {
 		});
 	});
 
+	it('GET to /admin/category/all returns all categories', done => {
+		request(app)
+			.get('/admin/category/all')
+			.set('admin-authorization', adminToken)
+			.end((err, res) => {
+				assert(res.body.length === 4);
+				done();
+			});
+	});
+
 	it('/POST to /admin/category creates a new category', done => {
 		request(app)
 			.post('/admin/category')

@@ -3,11 +3,12 @@ const Event = require('../models/event');
 const Meal = require('../models/meal');
 
 module.exports = {
+	getAllCategories(req, res, next) {
+		Category.find({})
+			.then(categories => res.json(categories))
+			.catch(next);
+	},
 	createCategory(req, res, next) {
-		if (!req.user.admin) {
-			return res.status(403).send({ error: 'You are not allowed to do that.' });
-		}
-
 		const { name } = req.body;
 
 		const category = new Category({ name });
@@ -17,10 +18,6 @@ module.exports = {
 			.catch(next);
 	},
 	deleteCategory(req, res, next) {
-		if (!req.user.admin) {
-			return res.status(403).send({ error: 'You are not allowed to do that.' });
-		}
-
 		const { category_id } = req.params;
 
 		Category.findByIdAndRemove(category_id)
@@ -28,10 +25,6 @@ module.exports = {
 			.catch(next);
 	},
 	createEvent(req, res, next) {
-		if (!req.user.admin) {
-			return res.status(403).send({ error: 'You are not allowed to do that.' });
-		}
-
 		const { 
 			name,
 			datetime,
@@ -61,10 +54,6 @@ module.exports = {
 			.catch(next);
 	},
 	updateEvent(req, res, next) {
-		if (!req.user.admin) {
-			return res.status(403).send({ error: 'You are not allowed to do that.' });
-		}
-
 		const { event_id } = req.params;
 
 		const { 
@@ -101,10 +90,6 @@ module.exports = {
 		.catch(next);
 	},
 	deleteEvent(req, res, next) {
-		if (!req.user.admin) {
-			return res.status(403).send({ error: 'You are not allowed to do that.' });
-		}
-
 		const { event_id } = req.params;
 		
 		Event.findByIdAndRemove(event_id)
@@ -112,10 +97,6 @@ module.exports = {
 			.catch(next);
 	},
 	createMeal(req, res, next) {
-		if (!req.user.admin) {
-			return res.status(403).send({ error: 'You are not allowed to do that.' });
-		}
-
 		const { name, price, description, imageUrl } = req.body;
 
 		const meal = new Meal({
