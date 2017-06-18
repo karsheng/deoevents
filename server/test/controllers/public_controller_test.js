@@ -79,7 +79,9 @@ describe('Public Controller', function(done) {
 		request(app)
 			.get(`/event/${event1._id}`)
 			.end((err, res) => {
-				console.log(res.body);
+				assert(res.body.name === 'Event 1');
+				assert(res.body.categories[0].name === '5km');
+				assert(res.body.lat === 3.1862);
 				done();
 			});
 	});
