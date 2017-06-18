@@ -6,9 +6,11 @@ const createCategory = require('../../helper/create_category_helper');
 const createUser = require('../../helper/create_user_helper');
 const createEvent = require('../../helper/create_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
+const createOrder = require('../../helper/create_order_helper');
 const faker = require('faker');
 const mongoose = require('mongoose');
 const Registration = mongoose.model('registration');
+const Order = mongoose.model('order');
 
 describe('User Controller', function(done) {
 	this.timeout(15000);
@@ -16,6 +18,7 @@ describe('User Controller', function(done) {
 	var cat1, cat2, cat3, cat4;
 	var meal1, meal2, meal3;
 	var event;
+	var order;
 
 	beforeEach(done => {
 		createAdmin('karshenglee@gmail.com', 'qwerty123')
@@ -70,12 +73,39 @@ describe('User Controller', function(done) {
 						)
 						.then(e => {
 							event = e;
-							done();	
+							createOrder(userToken, meal1, event, 5)
+								.then(ord => {
+									order = ord;
+									done();			
+								});
 						});
 					});
 				}); 
 			});
 		});
+	});
+
+	it('POST to /meal/order creates a meal order', done => {
+		request(app)
+			.post('/meal/order')
+			.set('authorization', userToken)
+			.send({
+				meal: meal1,
+				event,
+				quantity: 1
+			})
+			.end((err, res)=> {
+				Order.findById(res.body._id)
+					.populate({ path: 'meal', ref: 'meal' })
+					.populate({ path: 'user', ref: 'user' })
+					.populate({ path: 'event', ref: 'event' })
+					.then(order => {
+						assert(order.user.name === 'Gavin Belson');
+						assert(order.meal.name === 'Food 1');
+						assert(order.event.name === 'Event 1');
+						done();	
+					});
+			});
 	});
 
 	it('POST to /event/register register a user to event', done => {
@@ -84,18 +114,20 @@ describe('User Controller', function(done) {
 			.set('authorization', userToken)
 			.send({
 				event,
-				category: cat1,
+				category: cat1
 			})
 			.end((err, res) => {
 				Registration.findById(res.body._id)
 				.populate({ path: 'user', model: 'user' })
 				.populate({ path: 'event', model: 'event' })
 				.populate({ path: 'category', model: 'category' })
+				.populate({ path: 'orders', model: 'order' })
 				.then(reg => {
 					assert(reg.event.name === 'Event 1');
 					assert(reg.user.name === 'Gavin Belson');
 					assert(reg.category.name === '5km');
 					assert(reg.paid === false);
+					assert(reg.orders[0].quantity === 5);
 					done();
 				});
 			});

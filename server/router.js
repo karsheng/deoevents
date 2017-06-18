@@ -15,6 +15,7 @@ const adminRequireSignin = passport.authenticate('admin-local', { session: false
 module.exports = function(app) {
 	app.post('/signin', requireSignin, UserAuthController.signin); 
 	app.post('/signup', UserAuthController.signup);
+	app.post('/meal/order', requireAuth, UserController.placeMealOrder)
 	app.post('/event/register', requireAuth, UserController.registerForEvent);
 
 	app.get('/test', function(req, res) {
