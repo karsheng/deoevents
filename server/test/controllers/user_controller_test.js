@@ -7,6 +7,7 @@ const createUser = require('../../helper/create_user_helper');
 const createEvent = require('../../helper/create_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
 const createOrder = require('../../helper/create_order_helper');
+const createRegistration = require('../../helper/create_registration_helper');
 const faker = require('faker');
 const mongoose = require('mongoose');
 const Registration = mongoose.model('registration');
@@ -110,10 +111,9 @@ describe('User Controller', function(done) {
 
 	it('POST to /event/register register a user to event', done => {
 		request(app)
-			.post('/event/register')
+			.post(`/event/register/${event._id}`)
 			.set('authorization', userToken)
 			.send({
-				event,
 				category: cat1
 			})
 			.end((err, res) => {
@@ -131,5 +131,25 @@ describe('User Controller', function(done) {
 					done();
 				});
 			});
+	});
+
+	it('PUT to /event/register/:event_id updates the registration', done => {
+		createRegistration(userToken, event._id, cat1)
+		.then(reg => {
+			request(app)
+				.put(`/event/register/${event._id}`)
+				.set('authorization', userToken)
+				.send({
+					category: cat2
+				})
+				.end((err, res) => {
+					Registration.findById(res.body._id)
+						.populate({ path: 'category', model: 'category' })
+						.then(reg => {
+							assert(reg.category.name === '10km');
+							done();
+						});
+				});
+		});
 	});
 });

@@ -20,7 +20,8 @@ module.exports = function(app) {
 	app.post('/signup', UserAuthController.signup);
 	app.post('/meal/order', requireAuth, UserController.placeMealOrder);
 
-	app.post('/event/register', requireAuth, UserController.registerForEvent);
+	app.post('/event/register/:event_id', requireAuth, UserController.registerForEvent);
+	app.put('/event/register/:event_id', requireAuth, UserController.updateRegistration);
 
 	app.get('/test', function(req, res) {
 		res.send("test success!");   
