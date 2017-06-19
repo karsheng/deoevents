@@ -20,13 +20,23 @@ module.exports = {
 		const { category } = req.body;
 
 		Registration.findOneAndUpdate(
-			{ event : event_id },
+			{ event : event_id, user: req.user._id },
 			{ category },
 			{ new: true }			
 		)
 		.then(reg => res.json(reg))
 		.catch(next);
 
+	},
+	deleteRegistration(req, res, next) {
+		const { event_id } = req.params;
+
+		Registration.findOneAndRemove({ 
+			event: event_id, 
+			user: req.user._id
+		})
+		.then(reg => res.send(reg))
+		.catch(next);
 	},
 	placeMealOrder(req, res, next) {
 		const {

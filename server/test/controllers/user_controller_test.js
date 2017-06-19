@@ -152,4 +152,21 @@ describe('User Controller', function(done) {
 				});
 		});
 	});
+
+	it('DELETE to /event/register/:event_id removes the registration', done => {
+		createRegistration(userToken, event._id, cat1)
+			.then(reg => {
+				request(app)
+					.delete(`/event/register/${event._id}`)
+					.set('authorization', userToken)
+					.end((err, res) => {
+
+						Registration.findById(reg._id)
+							.then(result => {
+								assert(result === null);
+								done();
+							});
+					});
+			});
+	});
 });
