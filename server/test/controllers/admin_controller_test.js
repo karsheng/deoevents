@@ -154,4 +154,18 @@ describe('Admin Controller', function(done) {
 				});
 			});
 	});
+
+	it('GET to /admin/meal/:meal_id deletes a meal', done => {
+		assert(meal1.name === 'Food 1');
+		request(app)
+			.delete(`/admin/meal/${meal1._id}`)
+			.set('admin-authorization', adminToken)
+			.end((err, res) => {
+				Meal.findById(res.body._id)
+					.then(result => {
+						assert(result === null);
+						done();
+					});
+			});
+	});
 });

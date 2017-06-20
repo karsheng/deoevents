@@ -94,5 +94,12 @@ module.exports = {
 		Meal.findById(meal_id)
 			.then(meal => res.json(meal))
 			.catch(next);
+	},
+	deleteMeal(req, res, next) {
+		const { meal_id } = req.params;
+
+		Meal.findByIdAndRemove(meal_id)
+			.then(meal => res.json(meal))
+			.catch(next);
 	}
 };
