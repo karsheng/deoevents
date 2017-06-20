@@ -74,6 +74,24 @@ describe('User Controller', function(done) {
 		});
 	});
 
+	it('GET to /meal/order/:registration_id returns a meal order', done => {
+		createRegistration(userToken, event._id, cat1)
+		.then(registration => {
+			createOrder(userToken, meal1, registration, 10)
+			.then(order => {
+				request(app)
+					.get(`/meal/order/${order._id}`)
+					.set('authorization', userToken)
+					.end((err, res) => {
+						assert(res.body.meal.name === 'Food 1');
+						assert(res.body.quantity === 10);
+						assert(res.body.registration.toString() === registration._id.toString());
+						done();
+					});
+			});
+		});
+	});
+
 	it('POST to /meal/order/:registration_id creates a meal order', done => {
 		createRegistration(userToken, event._id, cat1)
 		.then(registration => {

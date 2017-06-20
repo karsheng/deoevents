@@ -1,5 +1,6 @@
 const Registration = require('../models/registration');
 const Order = require('../models/order');
+
 module.exports = {
 	registerForEvent(req, res, next) {
 		const { event_id } = req.params;
@@ -67,6 +68,19 @@ module.exports = {
 
 		order.save()
 			.then(ord => res.json(ord))
+			.catch(next);
+	},
+	getMealOrder(req, res, next) {
+		const { order_id } = req.params;
+
+		Order.findById(order_id)
+			.populate({ path: 'meal', model: 'meal' })
+			.then(order => {
+				if (order.user.toString() !== req.user._id.toString()) {
+					return res.status(403).send({ error: 'You are not allowed here...'})
+				}
+				res.json(order);
+			})
 			.catch(next);
 	},
 	updateMealOrder(req, res, next) {
