@@ -1,29 +1,7 @@
-const Category = require('../models/category');
 const Event = require('../models/event');
 const Meal = require('../models/meal');
 
 module.exports = {
-	getAllCategories(req, res, next) {
-		Category.find({})
-			.then(categories => res.json(categories))
-			.catch(next);
-	},
-	createCategory(req, res, next) {
-		const { name } = req.body;
-
-		const category = new Category({ name });
-
-		category.save()
-			.then(cat => res.send(cat))
-			.catch(next);
-	},
-	deleteCategory(req, res, next) {
-		const { category_id } = req.params;
-
-		Category.findByIdAndRemove(category_id)
-			.then(removedCat => res.json(removedCat))
-			.catch(next);
-	},
 	createEvent(req, res, next) {
 		const { 
 			name,

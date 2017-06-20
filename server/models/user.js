@@ -14,10 +14,7 @@ const UserSchema = new Schema({
 	city: { type: String },
 	postcode: { type: String },
 	country: { type: String },
-	interests: [{
-		type: Schema.Types.ObjectId,
-		ref: 'category'
-	}],
+	interests: [CategorySchema],
 	admin: {
 		type: Boolean,
 		default: false

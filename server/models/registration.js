@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Order = require('./order');
 const Schema = mongoose.Schema;
-
+const CategorySchema = require('./category');
 
 const RegistrationSchema = new Schema(
 	{
@@ -13,10 +13,7 @@ const RegistrationSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'event'
 		},
-		category: {
-			type: Schema.Types.ObjectId,
-			ref: 'category'
-		},
+		category: CategorySchema,
 		paid: {
 			type: Boolean,
 			default: false

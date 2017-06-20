@@ -35,10 +35,6 @@ module.exports = function(app) {
 	app.post('/admin/create', AdminAuthController.createAdmin);
 	app.post('/admin/signin', adminRequireSignin, AdminAuthController.signin);
 
-	app.get('/admin/category/all', adminRequireAuth, AdminController.getAllCategories);
-	app.post('/admin/category', adminRequireAuth, AdminController.createCategory);
-	app.delete('/admin/category/:category_id', adminRequireAuth, AdminController.deleteCategory);
-
 	app.post('/admin/event', adminRequireAuth, AdminController.createEvent);
 	app.put('/admin/event/:event_id', adminRequireAuth, AdminController.updateEvent);
 	app.delete('/admin/event/:event_id', adminRequireAuth, AdminController.deleteEvent);

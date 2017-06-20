@@ -14,19 +14,11 @@ describe('User Auth Controller', function(done){
 	beforeEach(done => {
 		createAdmin('karsheng_88@hotmail.com', 'qwerty123')
 		.then(token => {
-			Promise.all([
-				createCategory(token, '5km'),
-				createCategory(token, '10km'),
-				createCategory(token, 'half-marathon'),
-				createCategory(token, 'full-marathon')
-			])
-			.then(categories => {
-				cat1 = categories[0];
-				cat2 = categories[1];
-				cat3 = categories[2];
-				cat4 = categories[3];
-				done();
-			});
+			cat1 = createCategory('5km', null);
+			cat2 = createCategory('10km', null);
+			cat3 = createCategory('half-marathon', null);
+			cat4 = createCategory('full-marathon', null);
+			done();
 		});
 	});
 
@@ -43,11 +35,10 @@ describe('User Auth Controller', function(done){
 				address2: 'Desa Parkcity',
 				city: 'Kuala Lumpur',
 				postcode: '52200',
-				interests: [cat1._id, cat2._id, cat3._id, cat4._id]
+				interests: [cat1, cat2, cat3, cat4]
 			})
 			.end((err, res) => {
 				User.findOne({ name: 'Lee Kar Sheng' })
-					.populate({ path: 'interests', model: 'category' })
 					.then(user => {
 						assert(user.email === 'karshenglee@gmail.com');
 						assert(user.interests[0].name === '5km');
