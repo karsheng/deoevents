@@ -54,7 +54,7 @@ describe('Admin Controller', function(done) {
 		});
 	});
 
-	it('/POST to /admin/event creates a new event', done => {
+	it('POST to /admin/event creates a new event', done => {
 		request(app)
 			.post('/admin/event')
 			.set('admin-authorization', adminToken)
@@ -107,7 +107,7 @@ describe('Admin Controller', function(done) {
 					assert(e.categories.length === 2);
 					assert(e.meals.length === 2);
 					done();
-				})
+				});
 			});
 	});
 
@@ -121,6 +121,17 @@ describe('Admin Controller', function(done) {
 						assert(e === null);
 						done();
 					});
+			});
+	});
+
+	it('GET to /admin/meal/:meal_id returns a meal', done => {
+		request(app)
+			.get(`/admin/meal/${meal1._id}`)
+			.set('admin-authorization', adminToken)
+			.end((err, res) => {
+				assert(res.body.name === 'Food 1');
+				assert(res.body.price === 11.0);
+				done();
 			});
 	});
 

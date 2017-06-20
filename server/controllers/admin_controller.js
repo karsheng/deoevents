@@ -87,5 +87,12 @@ module.exports = {
 		meal.save()
 		.then(m => res.json(m))
 		.catch(next);
+	},
+	getMeal(req, res, next) {
+		const { meal_id } = req.params;
+
+		Meal.findById(meal_id)
+			.then(meal => res.json(meal))
+			.catch(next);
 	}
 };
