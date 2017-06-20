@@ -21,6 +21,7 @@ module.exports = function(app) {
 
 	app.post('/meal/order/:registration_id', requireAuth, UserController.placeMealOrder);
 	app.put('/meal/order/:order_id', requireAuth, UserController.updateMealOrder);
+	app.delete('/meal/order/:order_id', requireAuth, UserController.deleteMealOrder);
 
 	app.post('/event/register/:event_id', requireAuth, UserController.registerForEvent);
 	app.put('/event/register/:event_id', requireAuth, UserController.updateRegistration);

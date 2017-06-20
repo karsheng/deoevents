@@ -129,6 +129,25 @@ describe('User Controller', function(done) {
 		});
 	});
 
+	it('DELETE to /meal/order/:order_id deletes a meal order', done => {
+		createRegistration(userToken, event._id, cat1)
+		.then(registration => {
+			createOrder(userToken, meal1, registration, 10)
+				.then(order => {
+					request(app)
+					.delete(`/meal/order/${order._id}`)
+					.set('authorization', userToken)
+					.end((err, res) => {
+						Order.findById(order._id)
+							.then(result => {
+								assert(result === null);
+								done();
+							});
+					});
+				});
+		});
+	});	
+
 	it('POST to /event/register register a user to event', done => {
 		request(app)
 			.post(`/event/register/${event._id}`)

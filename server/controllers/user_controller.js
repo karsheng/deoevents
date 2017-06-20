@@ -66,5 +66,12 @@ module.exports = {
 		)
 			.then(order => res.json(order))
 			.catch(next);
+	},
+	deleteMealOrder(req, res, next) {
+		const { order_id } = req.params;
+
+		Order.findByIdAndRemove(order_id)
+			.then(removedOrder => res.json(removedOrder))
+			.catch(next);
 	}
 }
