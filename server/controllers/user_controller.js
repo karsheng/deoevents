@@ -39,16 +39,16 @@ module.exports = {
 		.catch(next);
 	},
 	placeMealOrder(req, res, next) {
+		const { registration_id } = req.params;
 		const {
 			meal,
-			event,
 			quantity
 		} = req.body;
 
 		const order = new Order({
 			user: req.user._id,
 			meal,
-			event,
+			registration: registration_id,
 			quantity
 		});
 

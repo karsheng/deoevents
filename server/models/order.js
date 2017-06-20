@@ -10,9 +10,9 @@ const OrderSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'meal'
 	},
-	event: {
+	registration: {
 		type: Schema.Types.ObjectId,
-		ref: 'event'
+		ref: 'registration'
 	},
 	quantity: {
 		type: Number

@@ -74,11 +74,7 @@ describe('User Controller', function(done) {
 						)
 						.then(e => {
 							event = e;
-							createOrder(userToken, meal1, event, 5)
-								.then(ord => {
-									order = ord;
-									done();			
-								});
+							done();
 						});
 					});
 				}); 
@@ -86,45 +82,50 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('POST to /meal/order creates a meal order', done => {
-		request(app)
-			.post('/meal/order')
-			.set('authorization', userToken)
-			.send({
-				meal: meal1,
-				event,
-				quantity: 1
-			})
-			.end((err, res)=> {
-				Order.findById(res.body._id)
-					.populate({ path: 'meal', ref: 'meal' })
-					.populate({ path: 'user', ref: 'user' })
-					.populate({ path: 'event', ref: 'event' })
-					.then(order => {
-						assert(order.user.name === 'Gavin Belson');
-						assert(order.meal.name === 'Food 1');
-						assert(order.event.name === 'Event 1');
-						done();	
-					});
-			});
+	it('POST to /meal/order/:registration_id creates a meal order', done => {
+		createRegistration(userToken, event._id, cat1)
+		.then(registration => {
+			request(app)
+				.post(`/meal/order/${registration._id}`)
+				.set('authorization', userToken)
+				.send({
+					meal: meal1,
+					registration,
+					quantity: 1
+				})
+				.end((err, res)=> {
+					Order.findById(res.body._id)
+						.populate({ path: 'meal', ref: 'meal' })
+						.populate({ path: 'user', ref: 'user' })
+						.then(order => {
+							assert(order.user.name === 'Gavin Belson');
+							assert(order.meal.name === 'Food 1');
+							assert(order.registration.toString() === registration._id);
+							done();	
+						});
+				});
+		});
 	});
 
 	it('PUT to /meal/order/:order_id updates a meal order', done => {
-		createOrder(userToken, meal1, event, 20)
-		.then(order => {
-			request(app)
-			.put(`/meal/order/${order._id}`)
-			.set('authorization', userToken)
-			.send({
-				quantity: 20
-			})
-			.end((err, res) => {
-				Order.findById(order._id)
-					.then(result => {
-						assert(result.quantity === 20);
-						done();
+		createRegistration(userToken, event._id, cat1)
+		.then(registration => {
+			createOrder(userToken, meal1, registration, 10)
+				.then(order => {
+					request(app)
+					.put(`/meal/order/${order._id}`)
+					.set('authorization', userToken)
+					.send({
+						quantity: 20
+					})
+					.end((err, res) => {
+						Order.findById(order._id)
+							.then(result => {
+								assert(result.quantity === 20);
+								done();
+							});
 					});
-			});
+				});
 		});
 	});
 
@@ -140,13 +141,11 @@ describe('User Controller', function(done) {
 				.populate({ path: 'user', model: 'user' })
 				.populate({ path: 'event', model: 'event' })
 				.populate({ path: 'category', model: 'category' })
-				.populate({ path: 'orders', model: 'order' })
 				.then(reg => {
 					assert(reg.event.name === 'Event 1');
 					assert(reg.user.name === 'Gavin Belson');
 					assert(reg.category.name === '5km');
 					assert(reg.paid === false);
-					assert(reg.orders[0].quantity === 5);
 					done();
 				});
 			});

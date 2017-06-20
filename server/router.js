@@ -18,8 +18,8 @@ module.exports = function(app) {
 
 	app.post('/signin', requireSignin, UserAuthController.signin); 
 	app.post('/signup', UserAuthController.signup);
-	
-	app.post('/meal/order', requireAuth, UserController.placeMealOrder);
+
+	app.post('/meal/order/:registration_id', requireAuth, UserController.placeMealOrder);
 	app.put('/meal/order/:order_id', requireAuth, UserController.updateMealOrder);
 
 	app.post('/event/register/:event_id', requireAuth, UserController.registerForEvent);
