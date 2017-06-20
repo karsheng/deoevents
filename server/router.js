@@ -19,6 +19,8 @@ module.exports = function(app) {
 	app.post('/signin', requireSignin, UserAuthController.signin); 
 	app.post('/signup', UserAuthController.signup);
 
+	app.put('/profile', requireAuth, UserAuthController.updateProfile);
+
 	app.get('/meal/order/:order_id', requireAuth, UserController.getMealOrder);
 	app.post('/meal/order/:registration_id', requireAuth, UserController.placeMealOrder);
 	app.put('/meal/order/:order_id', requireAuth, UserController.updateMealOrder);

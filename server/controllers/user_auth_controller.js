@@ -14,7 +14,6 @@ module.exports = {
 		// We just need to give them a token
 		res.send({ token: tokenForUser(req.user) }); 
 	},
-
 	signup(req, res, next) {
 		const {
 			name, 
@@ -67,5 +66,39 @@ module.exports = {
 			res.json({ token: tokenForUser(user) });
 			});
 		});
+	},
+	updateProfile(req, res, next) {
+		const {
+			name, 
+			gender,
+			address1,
+			address2,
+			address3,
+			city,
+			postcode,
+			country,
+			interests
+		} = req.body;
+
+		User.findByIdAndUpdate(
+			req.user._id,
+			{
+				name, 
+				gender,
+				address1,
+				address2,
+				address3,
+				city,
+				postcode,
+				country,
+				interests
+			},
+			{ new: true }
+		)
+		.select('name gender address1 address2 address3 city postcode country interests')
+		.then(user => {
+			res.json(user);
+		})
+		.catch(next);
 	}
 };
