@@ -55,5 +55,16 @@ module.exports = {
 		order.save()
 			.then(ord => res.json(ord))
 			.catch(next);
+	},
+	updateMealOrder(req, res, next) {
+		const { quantity } = req.body;
+		const { order_id } = req.params;
+
+		Order.findByIdAndUpdate(
+			order_id,
+			{ quantity }
+		)
+			.then(order => res.json(order))
+			.catch(next);
 	}
 }

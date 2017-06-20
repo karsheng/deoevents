@@ -109,6 +109,25 @@ describe('User Controller', function(done) {
 			});
 	});
 
+	it('PUT to /meal/order/:order_id updates a meal order', done => {
+		createOrder(userToken, meal1, event, 20)
+		.then(order => {
+			request(app)
+			.put(`/meal/order/${order._id}`)
+			.set('authorization', userToken)
+			.send({
+				quantity: 20
+			})
+			.end((err, res) => {
+				Order.findById(order._id)
+					.then(result => {
+						assert(result.quantity === 20);
+						done();
+					});
+			});
+		});
+	});
+
 	it('POST to /event/register register a user to event', done => {
 		request(app)
 			.post(`/event/register/${event._id}`)
