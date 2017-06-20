@@ -42,6 +42,7 @@ module.exports = function(app) {
 	app.put('/admin/event/:event_id', adminRequireAuth, AdminController.updateEvent);
 	app.delete('/admin/event/:event_id', adminRequireAuth, AdminController.deleteEvent);
 	
+	app.get('/admin/meal/all', adminRequireAuth, AdminController.getAllMeals);
 	app.get('/admin/meal/:meal_id', adminRequireAuth, AdminController.getMeal);
 	app.post('/admin/meal', adminRequireAuth, AdminController.createMeal);
 	app.delete('/admin/meal/:meal_id', adminRequireAuth, AdminController.deleteMeal);

@@ -95,6 +95,11 @@ module.exports = {
 			.then(meal => res.json(meal))
 			.catch(next);
 	},
+	getAllMeals(req, res, next) {
+		Meal.find({})
+			.then(meals => res.json(meals))
+			.catch(next);
+	},
 	deleteMeal(req, res, next) {
 		const { meal_id } = req.params;
 

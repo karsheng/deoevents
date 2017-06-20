@@ -135,6 +135,16 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
+	it('GET to /admin/meal/all returns all meals', done => {
+		request(app)
+			.get('/admin/meal/all')
+			.set('admin-authorization', adminToken)
+			.end((err, res) => {
+				assert(res.body.length === 3);
+				done();
+			});
+	});
+
 	it('POST to /admin/meal creates a meal', done => {
 		request(app)
 			.post('/admin/meal')
@@ -155,7 +165,7 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('GET to /admin/meal/:meal_id deletes a meal', done => {
+	it('DELETE to /admin/meal/:meal_id deletes a meal', done => {
 		assert(meal1.name === 'Food 1');
 		request(app)
 			.delete(`/admin/meal/${meal1._id}`)
