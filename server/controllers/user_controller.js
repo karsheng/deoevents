@@ -15,6 +15,20 @@ module.exports = {
 			.then(reg => res.json(reg))
 			.catch(next);
 	},
+	getRegistrationInfo(req, res, next) {
+		const { registration_id } = req.params;
+
+		Registration.findById(registration_id)
+			.populate({ path: 'event', model: 'event' })
+			.populate({ path: 'category', model: 'category'})
+			.then(reg => {
+				if (reg.user.toString() !== req.user._id.toString()) {
+					return res.status(403).send({ error: 'You are not allowed here...'})
+				}
+				res.json(reg);
+			})
+			.catch(next);
+	},
 	updateRegistration(req, res, next) {
 		const { event_id } = req.params;
 		const { category } = req.body;

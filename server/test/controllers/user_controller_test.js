@@ -148,6 +148,22 @@ describe('User Controller', function(done) {
 		});
 	});	
 
+
+	it('GET to /event/register/:registration_id returns registration info', done => {
+		createRegistration(userToken, event._id, cat1)
+		.then(registration => {
+			request(app)
+			.get(`/event/register/${registration._id}`)
+			.set('authorization', userToken)
+			.end((err, res) => {
+				assert(res.body.event.name === 'Event 1');
+				assert(res.body.c  ategory.name === '5km');
+				assert(res.body.paid === false);
+				done();
+			});
+		});
+	});
+
 	it('POST to /event/register register a user to event', done => {
 		request(app)
 			.post(`/event/register/${event._id}`)
