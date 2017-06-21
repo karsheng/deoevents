@@ -67,6 +67,23 @@ module.exports = {
 			});
 		});
 	},
+	updateEmail(req, res, next) {
+		const { email } = req.body;
+
+		User.findOne({ email })
+			.then(existingUser => {
+				if (existingUser) return res.status(422).send({ error: 'Email is in use' });
+
+				User.findByIdAndUpdate(
+					req.user._id,
+					{ email },
+					{ new: true }
+				)
+				.then(user => res.json(user))
+				.catch(next);
+			})
+			.catch(next);
+	},
 	updateProfile(req, res, next) {
 		const {
 			name, 

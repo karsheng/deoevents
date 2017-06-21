@@ -75,6 +75,36 @@ describe('User Auth Controller', function(done){
 			});
 	});
 
+	it('PUT to /user/email updats the user email', done => {
+		createUser(
+			'Gavin Belson',
+			'gavin@hooli.com',
+			'qwerty123',
+			true,
+			'100 Hooli Road',
+			'Silicon Valley',
+			'Palo Alto',
+			'San Francisco',
+			45720,
+			'U.S.',
+			[cat1, cat2, cat3, cat4]
+		)
+		.then(token => {
+			request(app)
+				.put('/user/email')
+				.set('authorization', token)
+				.send({ email: 'gavin@gmail.com'})
+				.end((err, res) => {
+					User.findById(res.body._id)
+						.then(user => {
+							assert(user.name === 'Gavin Belson');
+							assert(user.email === 'gavin@gmail.com');
+							done();
+						});
+				});
+		});
+	});
+
 	it('PUT to /profile updates the profile of the user', done => {
 		createUser(
 			'Gavin Belson',
