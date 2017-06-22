@@ -50,4 +50,5 @@ module.exports = function(app) {
 
 	app.post('/admin/associate', adminRequireAuth, AdminController.createAssociate);
 	app.put('/admin/associate/:associate_id', adminRequireAuth, AdminController.updateAssociate);
+	app.delete('/admin/associate/:associate_id', adminRequireAuth, AdminController.deleteAssociate);
 };

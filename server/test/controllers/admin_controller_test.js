@@ -246,4 +246,36 @@ describe('Admin Controller', function(done) {
 				});
 		});
 	});
+
+	it('DELETE to /admin/associate/associate_id deletes an associate', done => {
+		createAssociate(
+			adminToken,
+			'Adidas',
+			faker.image.sports(),
+			faker.image.imageUrl(),
+			'Adidas Street 1',
+			'Adidas City',
+			'Adidas County',
+			'Berlin',
+			13586,
+			'Germany',
+			'Key sponsor'
+		)
+		.then(asso => {
+			Associate.findById(asso._id)
+			.then(asso => {
+				assert(asso.name === 'Adidas');
+				request(app)
+					.delete(`/admin/associate/${asso._id}`)
+					.set('admin-authorization', adminToken)
+					.end((err, res) => {
+						Associate.findById(asso._id)
+							.then(result => {
+								assert(result === null);
+								done();
+							});
+					});
+			})
+		});
+	});
 });

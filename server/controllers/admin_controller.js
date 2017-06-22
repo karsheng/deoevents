@@ -173,5 +173,12 @@ module.exports = {
 		)
 			.then(asso => res.json(asso))
 			.catch(next);
+	},
+	deleteAssociate(req, res, next) {
+		const { associate_id } = req.params;
+
+		Associate.findByIdAndRemove(associate_id)
+			.then(asso => res.json(asso))
+			.catch(next);
 	}
 };
