@@ -84,6 +84,34 @@ module.exports = {
 			})
 			.catch(next);
 	},
+	changePassword(req, res, next) {
+		const { 
+			oldPassword, 
+			newPassword,
+			confirmPassword
+		} = req.body;
+
+		if (newPassword !== confirmPassword) {
+			return res.status(422).send({ error: 'Passwords do not match'});
+		}
+
+		var user = req.user;
+
+		user.comparePassword(oldPassword, function(err, isMatch) {
+			if (err) { return res.status(422).send(err); }
+
+			if (!isMatch) { return res.status(422).send({ error: 'Wrong old password'}); }
+
+			user.password = newPassword;
+
+			user.save(function(err) {
+				if (err) { return next(err); }
+				
+				res.send({ message: 'Password change successful' });
+			});
+
+		});
+	},
 	updateProfile(req, res, next) {
 		const {
 			name, 

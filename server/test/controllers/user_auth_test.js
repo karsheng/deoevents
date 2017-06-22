@@ -75,7 +75,7 @@ describe('User Auth Controller', function(done){
 			});
 	});
 
-	it('PUT to /user/email updats the user email', done => {
+	it('PUT to /user/email updates the user email', done => {
 		createUser(
 			'Gavin Belson',
 			'gavin@hooli.com',
@@ -99,6 +99,44 @@ describe('User Auth Controller', function(done){
 						.then(user => {
 							assert(user.name === 'Gavin Belson');
 							assert(user.email === 'gavin@gmail.com');
+							done();
+						});
+				});
+		});
+	});
+
+	it('POST to /user/password/change changes the user password', done => {
+		createUser(
+			'Gavin Belson',
+			'gavin@hooli.com',
+			'qwerty123',
+			true,
+			'100 Hooli Road',
+			'Silicon Valley',
+			'Palo Alto',
+			'San Francisco',
+			45720,
+			'U.S.',
+			[cat1, cat2, cat3, cat4]
+		)
+		.then(token => {
+			request(app)
+				.post('/user/password/change')
+				.set('authorization', token)
+				.send({
+					oldPassword: 'qwerty123',
+					newPassword: 'hellothere123',
+					confirmPassword: 'hellothere123'
+				})
+				.end((err, res) => {
+					request(app)
+						.post('/signin')
+						.send({
+							email: 'gavin@hooli.com',
+							password: 'hellothere123'
+						})
+						.end((err, res) => {
+							console.log(res.body);
 							done();
 						});
 				});

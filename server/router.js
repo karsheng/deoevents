@@ -19,6 +19,7 @@ module.exports = function(app) {
 	app.post('/signin', requireSignin, UserAuthController.signin); 
 	app.post('/signup', UserAuthController.signup);
 	app.put('/user/email', requireAuth, UserAuthController.updateEmail);
+	app.post('/user/password/change', requireAuth, UserAuthController.changePassword);
 	app.put('/profile', requireAuth, UserAuthController.updateProfile);
 
 	app.get('/meal/order/:order_id', requireAuth, UserController.getMealOrder);
