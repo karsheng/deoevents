@@ -6,6 +6,7 @@ const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
 const createMeal = require('../../helper/create_meal_helper');
 const createEvent = require('../../helper/create_event_helper');
+const createAssociate = require('../../helper/create_associate_helper');
 const faker = require('faker');
 const Event = mongoose.model('event');
 const Meal = mongoose.model('meal');
@@ -202,5 +203,47 @@ describe('Admin Controller', function(done) {
 					done();
 				});
 			});
+	});
+
+	it('PUT to /admin/associate/associate_id updates an associate info', done => {
+		createAssociate(
+			adminToken,
+			'Adidass',
+			faker.image.sports(),
+			faker.image.imageUrl(),
+			'Adidas Street 1',
+			'Adidas City',
+			'Adidas County',
+			'Berlin',
+			13586,
+			'Germany',
+			'Key sponsor'
+		)
+		.then(asso => {
+			assert(asso.name === 'Adidass');
+			assert(asso.description === 'Key sponsor');
+			request(app)
+				.put(`/admin/associate/${asso._id}`)
+				.set('admin-authorization', adminToken)
+				.send({
+					name: 'Adidas',
+					logo: faker.image.sports(),
+					imageUrl: faker.image.imageUrl(),
+					address1: 'Adidas Street 1',
+					address2: 'Adidas City',
+					city: 'Berlin',
+					postcode: 13586,
+					country: 'Germany',
+					description: 'Key sponsor and partner'
+				})
+				.end((err, res) => {
+					Associate.findOne({ name: 'Adidas' })
+						.then(result => {
+							assert(result.name === 'Adidas');
+							assert(result.description === 'Key sponsor and partner');
+							done();
+						});
+				});
+		});
 	});
 });

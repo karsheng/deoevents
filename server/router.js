@@ -49,4 +49,5 @@ module.exports = function(app) {
 	app.delete('/admin/meal/:meal_id', adminRequireAuth, AdminController.deleteMeal);
 
 	app.post('/admin/associate', adminRequireAuth, AdminController.createAssociate);
+	app.put('/admin/associate/:associate_id', adminRequireAuth, AdminController.updateAssociate);
 };

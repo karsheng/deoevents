@@ -138,5 +138,40 @@ module.exports = {
 		associate.save()
 			.then(asso => res.json(asso))
 			.catch(next);
+	},
+	updateAssociate(req, res, next) {
+		const {
+			name,
+			logo,
+			imageUrl,
+			address1,
+			address2,
+			address3,
+			city,
+			postcode,
+			country,
+			description
+		} = req.body;
+
+		const { associate_id } = req.params;
+
+		Associate.findByIdAndUpdate(
+			associate_id,
+			{
+				name,
+				logo,
+				imageUrl,
+				address1,
+				address2,
+				address3,
+				city,
+				postcode,
+				country,
+				description
+			},
+			{ new: true }
+		)
+			.then(asso => res.json(asso))
+			.catch(next);
 	}
 };
