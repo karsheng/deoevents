@@ -5,6 +5,7 @@ const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
 const createEvent = require('../../helper/create_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
+const createAssociate = require('../../helper/create_associate_helper')
 const faker = require('faker');
 
 describe('Public Controller', function(done) {
@@ -77,4 +78,31 @@ describe('Public Controller', function(done) {
 				done();
 			});
 	});
+
+	it('GET to /associate/:associate_id returns an associate', done => {
+		createAssociate(
+			adminToken,
+			'Adidas',
+			faker.image.sports(),
+			faker.image.imageUrl(),
+			'Adidas Street 1',
+			'Adidas City',
+			'Adidas County',
+			'Berlin',
+			13586,
+			'Germany',
+			'Key sponsor'
+		)
+		.then(asso => {
+			request(app)
+				.get(`/associate/${asso._id}`)
+				.end((err, res) => {
+					assert(res.body.name === 'Adidas');
+					assert(res.body.address2 === 'Adidas City');
+					assert(res.body.postcode === '13586');
+					assert(res.body.country === 'Germany');
+					done();
+				});
+		});
+	})
 });

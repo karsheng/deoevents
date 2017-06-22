@@ -15,6 +15,7 @@ const adminRequireSignin = passport.authenticate('admin-local', { session: false
 
 module.exports = function(app) {
 	app.get('/event/:event_id', PublicController.getEvent);
+	app.get('/associate/:associate_id', PublicController.getAssociate);
 
 	app.post('/signin', requireSignin, UserAuthController.signin); 
 	app.post('/signup', UserAuthController.signup);
