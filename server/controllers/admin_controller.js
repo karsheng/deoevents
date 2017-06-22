@@ -1,5 +1,6 @@
 const Event = require('../models/event');
 const Meal = require('../models/meal');
+const Associate = require('../models/associate');
 
 module.exports = {
 	createEvent(req, res, next) {
@@ -105,6 +106,37 @@ module.exports = {
 
 		Meal.findByIdAndRemove(meal_id)
 			.then(meal => res.json(meal))
+			.catch(next);
+	},
+	createAssociate(req, res, next) {
+		const {
+			name,
+			logo,
+			imageUrl,
+			address1,
+			address2,
+			address3,
+			city,
+			postcode,
+			country,
+			description
+		} = req.body;
+
+		const associate = new Associate({
+			name,
+			logo,
+			imageUrl,
+			address1,
+			address2,
+			address3,
+			city,
+			postcode,
+			country,
+			description
+		});
+
+		associate.save()
+			.then(asso => res.json(asso))
 			.catch(next);
 	}
 };

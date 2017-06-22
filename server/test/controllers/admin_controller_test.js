@@ -9,6 +9,7 @@ const createEvent = require('../../helper/create_event_helper');
 const faker = require('faker');
 const Event = mongoose.model('event');
 const Meal = mongoose.model('meal');
+const Associate = mongoose.model('associate');
 
 describe('Admin Controller', function(done) {
 	this.timeout(20000);
@@ -176,6 +177,30 @@ describe('Admin Controller', function(done) {
 						assert(result === null);
 						done();
 					});
+			});
+	});
+
+	it('POST to /admin/associate creates an associate', done => {
+		request(app)
+			.post('/admin/associate')
+			.set('admin-authorization', adminToken)
+			.send({
+				name: 'Adidas',
+				logo: faker.image.sports(),
+				imageUrl: faker.image.imageUrl(),
+				address1: 'Adidas Street 1',
+				address2: 'Adidas City',
+				city: 'Berlin',
+				postcode: 13586,
+				description: 'Key sponsor'
+			})
+			.end((err, res) => {
+				Associate.findOne({ name: 'Adidas'})
+				.then(result => {
+					assert(result.address1 === 'Adidas Street 1');
+					assert(result.address2 === 'Adidas City');
+					done();
+				});
 			});
 	});
 });
