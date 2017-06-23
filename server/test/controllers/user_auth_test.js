@@ -136,7 +136,7 @@ describe('User Auth Controller', function(done){
 							password: 'hellothere123'
 						})
 						.end((err, res) => {
-							console.log(res.body);
+							assert(res.body.token);
 							done();
 						});
 				});

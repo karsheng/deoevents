@@ -37,7 +37,7 @@ module.exports = function(app) {
 		res.send("test success!");   
 	});
 
-	app.post('/admin/create', AdminAuthController.createAdmin);
+	app.post('/admin/create', AdminAuthController.createAdmin); // TO BE DELETED
 	app.post('/admin/signin', adminRequireSignin, AdminAuthController.signin);
 
 	app.post('/admin/event', adminRequireAuth, AdminController.createEvent);
