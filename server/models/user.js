@@ -19,7 +19,7 @@ const UserSchema = new Schema({
 	postcode: { type: String },
 	country: { type: String },
 	interests: [CategorySchema],
-	admin: {
+	isAdmin: {
 		type: Boolean,
 		default: false
 	},

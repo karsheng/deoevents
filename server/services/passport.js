@@ -60,18 +60,25 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
 // admin local strategy
 const adminLocalOptions = { usernameField: 'email' }
 const adminLocalLogin = new LocalStrategy(adminLocalOptions, function(email, password, done) {
-	User.findOne({ email: email }, function(err, user) {
-		if (err) { return done(err); }
-		if (!user) { return done(null, false); }
-		if (!user.admin) { return done(null, false); }		
-		
-		// compare passwords - is 'password' equal to user password
-		user.comparePassword(password, function(err, isMatch) {
-			if (err) { return done(err); }
-			if (!isMatch) { return done(null, false); }
+	User.getAuthenticated(email, password, function(err, user, reason) {
+		if (err) return done(err);
+		if (user && user.isAdmin) return done(null, user);
 
-			return done(null, user);
-		});
+		const reasons = User.failedLogin;
+
+		switch (reason) {
+			case reasons.NOT_FOUND:
+				done(null, false);
+				break;
+			case reasons.PASSWORD_INCORRECT:
+				done(null, false);
+				break;
+			case reasons.MAX_ATTEMPTS:
+				// TODO: send email to users to notify them about locked account
+				done(null, false);
+				break;
+		}
+
 	});
 
 });
@@ -87,7 +94,7 @@ const adminJwtLogin = new JwtStrategy(adminJwtOptions, function(payload, done){
 	User.findById(payload.sub, function(err, user) {
 		if (err) { return done(err, false); } 
 
-		if (user && user.admin) {
+		if (user && user.isAdmin) {
 			done(null, user);
 		} else {
 			done(null, false);

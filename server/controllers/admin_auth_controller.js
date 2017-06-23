@@ -15,7 +15,7 @@ module.exports = {
 		const admin = new User({
 			email,
 			password,
-			admin: true
+			isAdmin: true
 		});
 		admin.save(function(err) {
 				if (err) { return next(err); }
