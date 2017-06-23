@@ -4,6 +4,7 @@ const app = require('../../app');
 const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
 const createUser = require('../../helper/create_user_helper');
+const signinUser = require('../../helper/user_signin_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
@@ -183,6 +184,48 @@ describe('User Auth Controller', function(done){
 							done();	
 						});
 				});
+		});
+	});
+
+	it('Failed login more than five times locks the account for two hours', done => {
+		createUser(
+			'Gavin Belson',
+			'gavin@hooli.com',
+			'qwerty123',
+			true,
+			'100 Hooli Road',
+			'Silicon Valley',
+			'Palo Alto',
+			'San Francisco',
+			45720,
+			'U.S.',
+			[cat1, cat2, cat3, cat4]
+		)
+		.then(_ => {
+			signinUser('gavin@hooli.com', 'qwerty123')
+			.then(res => {
+				assert(res.body.token);
+				signinUser('gavin@hooli.com', 'wrongpassword')
+				.then(_ => {
+					signinUser('gavin@hooli.com', 'wrongpassword')
+						.then(_ => {
+							signinUser('gavin@hooli.com', 'wrongpassword')
+							.then(_ => {
+								signinUser('gavin@hooli.com', 'wrongpassword')
+								.then(res => {
+									signinUser('gavin@hooli.com', 'wrongpassword')
+									.then(res => {
+										signinUser('gavin@hooli.com', 'qwerty123')
+											.then(res => {
+												assert(res.body.token === undefined);
+												done();
+										});
+									});
+								});
+							});
+						});
+				});
+			});
 		});
 	});
 });

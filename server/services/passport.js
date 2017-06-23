@@ -17,13 +17,14 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
 
 		switch (reason) {
 			case reasons.NOT_FOUND:
-				console.log('User not found');
+				done(null, false);
 				break;
 			case reasons.PASSWORD_INCORRECT:
-				console.log('Incorrect password');
+				done(null, false);
 				break;
 			case reasons.MAX_ATTEMPTS:
-				console.log('Max attempts exceeded');
+				// TODO: send email to users to notify them about locked account
+				done(null, false);
 				break;
 		}
 

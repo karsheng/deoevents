@@ -8,7 +8,7 @@ const passport = require('passport');
 
 
 const requireAuth = passport.authenticate('user-jwt', { session: false });
-const requireSignin = passport.authenticate('user-local', { session: false });
+const requireSignin = passport.authenticate('user-local', { session: false, failureFlash: true });
 const adminRequireAuth = passport.authenticate('admin-jwt', { session: false });
 const adminRequireSignin = passport.authenticate('admin-local', { session: false });
 
