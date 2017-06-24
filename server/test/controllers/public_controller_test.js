@@ -81,6 +81,15 @@ describe('Public Controller', function(done) {
 			});
 	});
 
+	it('GET to /event/open/all returns all open events', done => {
+		request(app)
+			.get('/event/open/all')
+			.end((err, res) => {
+				assert(res.body.length === 2);
+				done();
+			});
+	});
+
 	it('GET to /associate/:associate_id returns an associate', done => {
 		createAssociate(
 			adminToken,
@@ -106,5 +115,5 @@ describe('Public Controller', function(done) {
 					done();
 				});
 		});
-	})
+	});
 });

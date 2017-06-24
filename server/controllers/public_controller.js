@@ -12,6 +12,13 @@ module.exports ={
 			})
 			.catch(next);
 	},
+	getAllOpenEvents(req, res, next) {
+		Event
+		.find({ open: true })
+		.sort({ _id: 1 })
+		.then(events => res.json(events))
+		.catch(next);
+	},
 	getAssociate(req, res, next) {
 		const { associate_id } = req.params;
 
