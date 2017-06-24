@@ -14,7 +14,10 @@ const EventSchema = new Schema({
 	meals: [{
 		type: Schema.Types.ObjectId,
 		ref: 'meal'
-	}]
+	}],
+	open: {
+		type: Boolean
+	}
 });
 
 const Event = mongoose.model('event', EventSchema);

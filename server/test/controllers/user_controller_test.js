@@ -63,7 +63,8 @@ describe('User Controller', function(done) {
 						faker.lorem.paragraph(),
 						faker.image.imageUrl(),
 						[cat1, cat2, cat3, cat4],
-						[meal1, meal2, meal3]
+						[meal1, meal2, meal3],
+						true
 					)
 					.then(e => {
 						event = e;

@@ -47,7 +47,8 @@ describe('Admin Controller', function(done) {
 					faker.lorem.paragraphs(),
 					faker.image.imageUrl(),
 					[cat1, cat2, cat3, cat4],
-					[meal1, meal2, meal3]
+					[meal1, meal2, meal3],
+					true
 				).then(e => {
 					event = e;
 					done();
@@ -69,7 +70,8 @@ describe('Admin Controller', function(done) {
 				description: faker.lorem.paragraph(),
 				imageUrl: faker.image.imageUrl(),
 				categories: [cat1, cat2, cat3],
-				meals: [meal1, meal2, meal3]
+				meals: [meal1, meal2, meal3],
+				open: true
 			})
 			.end((err, res) => {
 				Event.findOne({ name: 'Event 1'})
@@ -79,6 +81,7 @@ describe('Admin Controller', function(done) {
 						assert(event.address === 'Desa Parkcity');
 						assert(event.lat === 3.1862);
 						assert(event.meals[0].name === 'Food 1');
+						assert(event.open === true);
 						done();
 					});
 			});
@@ -97,7 +100,8 @@ describe('Admin Controller', function(done) {
 				description: 'Changed Description',
 				imageUrl: '/changedurl/image.jpg',
 				categories: [cat1, cat2],
-				meals: [meal1, meal2]
+				meals: [meal1, meal2],
+				open: false
 			})
 			.end((err, res) => {
 				Event.findOne({ name: 'Changed Event Name'})
@@ -108,6 +112,7 @@ describe('Admin Controller', function(done) {
 					assert(e.imageUrl === '/changedurl/image.jpg');
 					assert(e.categories.length === 2);
 					assert(e.meals.length === 2);
+					assert(e.open === false);
 					done();
 				});
 			});

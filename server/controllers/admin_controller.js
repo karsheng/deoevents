@@ -13,7 +13,8 @@ module.exports = {
 			description,
 			imageUrl,
 			categories,
-			meals
+			meals,
+			open
 		} = req.body;
 
 		const event = new Event({
@@ -25,7 +26,8 @@ module.exports = {
 			description,
 			imageUrl,
 			categories,
-			meals
+			meals,
+			open
 		});
 
 		event.save()
@@ -44,7 +46,8 @@ module.exports = {
 			description,
 			imageUrl,
 			categories,
-			meals
+			meals,
+			open
 		} = req.body;
 
 		Event.findByIdAndUpdate(event_id, 
@@ -57,7 +60,8 @@ module.exports = {
 				description,
 				imageUrl,
 				categories,
-				meals
+				meals,
+				open
 			},
 			{
 				new: true
