@@ -21,6 +21,7 @@ module.exports = {
 
 		Registration.findById(registration_id)
 			.populate({ path: 'event', model: 'event' })
+			.populate({ path: 'category', model: 'category' })
 			.then(reg => {
 				if (reg.user.toString() !== req.user._id.toString()) {
 					return res.status(403).send({ error: 'You are not allowed here...'})

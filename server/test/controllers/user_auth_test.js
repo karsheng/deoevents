@@ -2,25 +2,33 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../../app');
 const createAdmin = require('../../helper/create_admin_helper');
-const createCategory = require('../../helper/create_category_helper');
+const createInterest = require('../../helper/create_interest_helper');
 const createUser = require('../../helper/create_user_helper');
 const signinUser = require('../../helper/user_signin_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
 describe('User Auth Controller', function(done){
-	var cat1, cat2, cat3, cat4;
+	var int1, int2, int3, int4;
 
 	this.timeout(15000);
 
 	beforeEach(done => {
 		createAdmin('karsheng_88@hotmail.com', 'qwerty123')
 		.then(token => {
-			cat1 = createCategory('5km', null);
-			cat2 = createCategory('10km', null);
-			cat3 = createCategory('half-marathon', null);
-			cat4 = createCategory('full-marathon', null);
-			done();
+			Promise.all([
+				createInterest(token, '5km'),
+				createInterest(token, '10km'),
+				createInterest(token, 'half-marathon'),
+				createInterest(token, 'full-marathon'),
+			])
+			.then(interests => {
+				int1 = interests[0];
+				int2 = interests[1];
+				int3 = interests[2];
+				int4 = interests[3];
+				done();
+			});
 		});
 	});
 
@@ -37,10 +45,11 @@ describe('User Auth Controller', function(done){
 				address2: 'Desa Parkcity',
 				city: 'Kuala Lumpur',
 				postcode: '52200',
-				interests: [cat1, cat2, cat3, cat4]
+				interests: [int1, int2, int3, int4]
 			})
 			.end((err, res) => {
 				User.findOne({ name: 'Lee Kar Sheng' })
+					.populate({ path: 'interests', model: 'interest' })
 					.then(user => {
 						assert(user.email === 'karshenglee@gmail.com');
 						assert(user.interests[0].name === '5km');
@@ -88,7 +97,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[cat1, cat2, cat3, cat4]
+			[int1, int2, int3, int4]
 		)
 		.then(token => {
 			request(app)
@@ -118,7 +127,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[cat1, cat2, cat3, cat4]
+			[int1, int2, int3, int4]
 		)
 		.then(token => {
 			request(app)
@@ -156,7 +165,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[cat1, cat2, cat3, cat4]
+			[int1, int2, int3, int4]
 		)
 		.then(token => {
 			request(app)
@@ -172,7 +181,7 @@ describe('User Auth Controller', function(done){
 					city: 'San Franscisco',
 					postcode: 13576,
 					country: 'U.S.',
-					interests: [cat3, cat4]
+					interests: [int3, int4]
 				})
 				.end((err, res) => {
 					User.findOne({ name: 'Gavin Fucking Belson'})
@@ -199,7 +208,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[cat1, cat2, cat3, cat4]
+			[int1, int2, int3, int4]
 		)
 		.then(_ => {
 			signinUser('gavin@hooli.com', 'qwerty123')

@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const CategorySchema = require('./category');
 
 const EventSchema = new Schema({
 	name: String,
@@ -10,7 +9,10 @@ const EventSchema = new Schema({
 	lng: Number,
 	description: String,
 	imageUrl: String,
-	categories: [CategorySchema],
+	categories: [{
+		type: Schema.Types.ObjectId,
+		ref: 'category'
+	}],
 	meals: [{
 		type: Schema.Types.ObjectId,
 		ref: 'meal'

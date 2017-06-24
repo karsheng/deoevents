@@ -1,33 +1,65 @@
+const Category = require('../models/category');
+const Interest = require('../models/interest');
 const Event = require('../models/event');
 const Meal = require('../models/meal');
 const Associate = require('../models/associate');
 
 module.exports = {
+	createInterest(req, res, next) {
+		const { name } = req.body;
+
+		const interest = new Interest({ name });
+
+		interest.save()
+			.then(int => res.json(int))
+			.catch(next);
+	},
+	removeInterest(req, res, next) {
+		const { interest_id } = req.params;
+
+		Interest.findByIdAndRemove(interest_id)
+		.then(int => res.json(int))
+		.catch(next);
+	},
+	createCategory(req, res, next) {
+		const {
+			name,
+			price,
+			gender,
+			ageMin,
+			ageMax,
+			participantLimit,
+			event
+		} = req.body;
+
+		const category = new Category({
+			name,
+			price,
+			gender,
+			ageMin,
+			ageMax,
+			participantLimit,
+			event
+		});
+
+		category.save()
+			.then(cat => res.send(cat))
+			.catch(next);
+	},
+	removeCategory(req, res, next) {
+		const { category_id } = req.params;
+
+		Category.findByIdAndRemove(category_id)
+		.then(cat => res.send(cat))
+		.catch(next);
+	},
 	createEvent(req, res, next) {
 		const { 
-			name,
-			datetime,
-			address,
-			lat,
-			lng,
-			description,
-			imageUrl,
-			categories,
-			meals,
-			open
+			name
 		} = req.body;
 
 		const event = new Event({
-			name,
-			datetime,
-			address,
-			lat,
-			lng,
-			description,
-			imageUrl,
-			categories,
-			meals,
-			open
+			name
 		});
 
 		event.save()

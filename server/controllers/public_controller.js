@@ -7,6 +7,7 @@ module.exports ={
 		const { event_id } = req.params;
 
 		Event.findById(event_id)
+			.populate({ path: 'categories', model: 'category' })
 			.then(event => {
 				res.json(event);
 			})

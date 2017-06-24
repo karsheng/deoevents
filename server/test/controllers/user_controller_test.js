@@ -5,8 +5,10 @@ const createAdmin = require('../../helper/create_admin_helper');
 const createCategory = require('../../helper/create_category_helper');
 const createUser = require('../../helper/create_user_helper');
 const createEvent = require('../../helper/create_event_helper');
+const updateEvent = require('../../helper/update_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
 const createOrder = require('../../helper/create_order_helper');
+const createInterest = require('../../helper/create_interest_helper');
 const createRegistration = require('../../helper/create_registration_helper');
 const faker = require('faker');
 const mongoose = require('mongoose');
@@ -17,6 +19,7 @@ describe('User Controller', function(done) {
 	this.timeout(15000);
 	var adminToken, userToken;
 	var cat1, cat2, cat3, cat4;
+	var int1, int2, int3, int4;
 	var meal1, meal2, meal3;
 	var event;
 	var order;
@@ -25,53 +28,78 @@ describe('User Controller', function(done) {
 		createAdmin('karshenglee@gmail.com', 'qwerty123')
 		.then(token => {
 			adminToken = token;
-			cat1 = createCategory('5km', 59);
-			cat2 = createCategory('10km', 69);
-			cat3 = createCategory('half-marathon', 79);
-			cat4 = createCategory('full-marathon', 89);
-			createUser(
-				'Gavin Belson',
-				'gavin@hooli.com',
-				'qwerty123',
-				true,
-				'100 Hooli Road',
-				'Silicon Valley',
-				'Palo Alto',
-				'San Francisco',
-				45720,
-				'U.S.',
-				[cat1, cat2, cat3, cat4]
-			)
-			.then(ut => {
-				userToken = ut;
-				Promise.all([
-					createMeal(adminToken, 'Food 1', 11.0, faker.lorem.paragraph(), faker.image.food()),
-					createMeal(adminToken, 'Food 2', 22.0, faker.lorem.paragraph(), faker.image.food()),
-					createMeal(adminToken, 'Food 3', 33.0, faker.lorem.paragraph(), faker.image.food())
-				])
-				.then(meals => {
-					meal1 = meals[0];
-					meal2 = meals[1];
-					meal3 = meals[2];
-					createEvent(
-						adminToken,
-						'Event 1',
-						new Date().getTime(),
-						'Desa Parkcity',
-						3.1862,
-						101.6299,
-						faker.lorem.paragraph(),
-						faker.image.imageUrl(),
-						[cat1, cat2, cat3, cat4],
-						[meal1, meal2, meal3],
-						true
-					)
-					.then(e => {
-						event = e;
-						done();
+			Promise.all([
+				createMeal(adminToken, 'Food 1', 11.0, faker.lorem.paragraph(), faker.image.food()),
+				createMeal(adminToken, 'Food 2', 22.0, faker.lorem.paragraph(), faker.image.food()),
+				createMeal(adminToken, 'Food 3', 33.0, faker.lorem.paragraph(), faker.image.food())
+			])
+			.then(meals => {
+				meal1 = meals[0];
+				meal2 = meals[1];
+				meal3 = meals[2];
+
+				createEvent(adminToken, 'Event 1')
+				.then(e => {
+					Promise.all([
+						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, e),
+						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, e),
+						createCategory(adminToken, 'half-marathon', 70, true, 21, 48, 1000, e),
+						createCategory(adminToken, 'full-marathon', 80, true, 21, 48, 1000, e),
+					])
+					.then(cats => {
+						cat1 = cats[0];
+						cat2 = cats[1];
+						cat3 = cats[2];
+						cat4 = cats[3];
+						updateEvent(
+							adminToken,
+							e._id,
+							'Event 1',
+							new Date().getTime(),
+							'Desa Parkcity',
+							3.1862,
+							101.6299,
+							faker.lorem.paragraph(),
+							faker.image.imageUrl(),
+							[cat1, cat2, cat3, cat4],
+							[meal1, meal2, meal3],
+							true
+						)
+						.then(updatedEvent => {
+							event = updatedEvent;
+							Promise.all([
+								createInterest(adminToken, '5km'),
+								createInterest(adminToken, '10km'),
+								createInterest(adminToken, 'half-marathon'),
+								createInterest(adminToken, 'full-marathon')
+							])
+							.then(interests => {
+								int1 = interests[0];
+								int2 = interests[1];
+								int3 = interests[2];
+								int4 = interests[3];
+								createUser(
+									'Gavin Belson',
+									'gavin@hooli.com',
+									'qwerty123',
+									true,
+									'100 Hooli Road',
+									'Silicon Valley',
+									'Palo Alto',
+									'San Francisco',
+									45720,
+									'U.S.',
+									[int1, int2, int3, int4]
+								)
+								.then(ut => {
+									userToken = ut;
+									done();
+								});
+							});
+						});
 					});
 				});
-			}); 
+			});			
 		});
 	});
 
@@ -186,6 +214,7 @@ describe('User Controller', function(done) {
 				Registration.findById(res.body._id)
 				.populate({ path: 'user', model: 'user' })
 				.populate({ path: 'event', model: 'event' })
+				.populate({ path: 'category', model: 'category' })
 				.then(reg => {
 					assert(reg.event.name === 'Event 1');
 					assert(reg.user.name === 'Gavin Belson');
@@ -207,6 +236,7 @@ describe('User Controller', function(done) {
 				})
 				.end((err, res) => {
 					Registration.findById(res.body._id)
+						.populate({ path: 'category', model: 'category' })
 						.then(reg => {
 							assert(reg.category.name === '10km');
 							done();

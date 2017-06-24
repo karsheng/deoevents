@@ -1,14 +1,16 @@
 const request = require('supertest');
-const app = require('../app');
+const app  = require('../app');
 
 module.exports = (token, name) => {
 	return new Promise((resolve, reject) => {
 		request(app)
-			.post('/admin/event')
+			.post('/admin/interest')
 			.set('admin-authorization', token)
-			.send({ name })
+			.send({
+				name
+			})
 			.end((err, res) => {
 				resolve(res.body);
 			});
-	});
+	}); 
 }

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
-const CategorySchema = require('./category');
 
 // max of 5 attempts, resulting in a 2 hour lock
 const MAX_LOGIN_ATTEMPTS = 5;
@@ -18,7 +17,10 @@ const UserSchema = new Schema({
 	city: { type: String },
 	postcode: { type: String },
 	country: { type: String },
-	interests: [CategorySchema],
+	interests: [{
+        type: Schema.Types.ObjectId,
+        ref: 'interest'
+    }],
 	isAdmin: {
 		type: Boolean,
 		default: false
