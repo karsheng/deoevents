@@ -11,7 +11,7 @@ const updateEvent = require('../helper/update_event_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
-describe.only('Registration Rules', function(done) {
+describe('Registration Rules', function(done) {
 	this.timeout(20000);
 	var event;
 	var adminToken, userToken1, userToken2;
@@ -128,6 +128,18 @@ describe.only('Registration Rules', function(done) {
 		});
 	});
 
+	it('Returns error if user tries to register to the same event more than once', done => {
+		createRegistration(userToken1, event._id, cat3)
+		.then(reg => {
+			request(app)
+				.post(`/event/register/${event._id}/${cat3._id}`)
+				.set('authorization', userToken1)
+				.end((err, res) => {
+					assert(res.body.message === 'User already registered');
+					done();
+				});
+		});		
+	});
 
 	xit('Returns error if user tries to register for an event and the participantLimit is met', done => {
 		createRegistration(userToken1, event._id, cat4)

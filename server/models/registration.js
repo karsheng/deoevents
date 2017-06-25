@@ -24,7 +24,7 @@ const RegistrationSchema = new Schema(
 	{ timestamps: { createdAt: 'timeRegistered' } }
 );
 
-RegistrationSchema.statics.checkStatus = function(category, cb) {
+RegistrationSchema.statics.checkStatus = function(user, category, cb) {
 	this
 		.find({ category, paid: true })
 		.exec(function(err, regs) {
