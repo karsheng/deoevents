@@ -14,11 +14,11 @@ const CategorySchema = new Schema({
 	}
 });
 
-CategorySchema.methods.checkAge = function(dateOfBirth, cb) {
+CategorySchema.methods.checkEligibility = function(dateOfBirth, gender, cb) {
 	const category = this;
 	const age = _calculateAge(dateOfBirth);
 
-	if (age >= category.ageMin && age <= category.ageMax) {
+	if (age >= category.ageMin && age <= category.ageMax && gender === category.gender) {
 		return cb(true);
 	}
 

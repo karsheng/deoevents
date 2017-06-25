@@ -4,13 +4,13 @@ const Category = require('../models/category');
 
 module.exports = {
 	registerForEvent(req, res, next) {
-		const { event_id } = req.params;
-		const { category } = req.body;
+		const { event_id, category_id } = req.params;
+		const { user } = req;
 
-		Category.findById(category)
-		.then(cat => {
-			cat.checkAge(req.user.dateOfBirth, function(ageIsValid) {
-				if (ageIsValid) {
+		Category.findById(category_id)
+		.then(category => {
+			category.checkEligibility(user.dateOfBirth, user.gender, function(isEligible) {
+				if (isEligible) {
 					const registration = new Registration({
 						user: req.user._id,
 						event: event_id,
@@ -21,7 +21,7 @@ module.exports = {
 						.then(reg => res.json(reg))
 						.catch(next);
 				} else {
-					res.status(422).send({ error: 'You cannot register for this category' })
+					res.status(422).send({ error: 'You cannot register for this category' });
 				}
 
 			});
@@ -43,23 +43,33 @@ module.exports = {
 			.catch(next);
 	},
 	updateRegistration(req, res, next) {
-		const { event_id } = req.params;
-		const { category } = req.body;
+		const { registration_id, category_id } = req.params;
+		const { user } = req;
 
-		Registration.findOneAndUpdate(
-			{ event : event_id, user: req.user._id },
-			{ category },
-			{ new: true }			
-		)
-		.then(reg => res.json(reg))
+		Category.findById(category_id)
+		.then(category => {
+			category.checkEligibility(user.dateOfBirth, user.gender, function(isEligible) {
+				if (isEligible) {
+					Registration.findOneAndUpdate(
+						{ _id : registration_id, user: req.user._id },
+						{ category },
+						{ new: true }			
+					)
+					.then(reg => res.json(reg))
+					.catch(next);
+				} else {
+					res.status(422).send({ error: 'You cannot register for this category' });
+				}
+			});
+		})
 		.catch(next);
 
 	},
 	deleteRegistration(req, res, next) {
-		const { event_id } = req.params;
+		const { registration_id } = req.params;
 
 		Registration.findOneAndRemove({ 
-			event: event_id, 
+			_id: registration_id, 
 			user: req.user._id
 		})
 		.then(reg => res.send(reg))

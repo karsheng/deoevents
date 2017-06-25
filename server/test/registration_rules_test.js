@@ -70,11 +70,8 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user age does not fall within allowable age range', done => {
 		request(app)
-			.post(`/event/register/${event._id}`)
+			.post(`/event/register/${event._id}/${cat1._id}`)
 			.set('authorization', userToken)
-			.send({	
-				category: cat1
-			})
 			.end((err, res) => {
 				// user born in 1957, age limit is 21 to 48
 				// return with error

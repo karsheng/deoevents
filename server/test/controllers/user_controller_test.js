@@ -204,13 +204,10 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('POST to /event/register register a user to event', done => {
+	it('POST to /event/register/:registration_id/:category_id register a user to event', done => {
 		request(app)
-			.post(`/event/register/${event._id}`)
+			.post(`/event/register/${event._id}/${cat1._id}`)
 			.set('authorization', userToken)
-			.send({
-				category: cat1
-			})
 			.end((err, res) => {
 				Registration.findById(res.body._id)
 				.populate({ path: 'user', model: 'user' })
@@ -226,15 +223,12 @@ describe('User Controller', function(done) {
 			});
 	});
 
-	it('PUT to /event/register/:event_id updates the registration', done => {
+	it('PUT to /event/register/:registration_id/:category_id updates the registration', done => {
 		createRegistration(userToken, event._id, cat1)
 		.then(reg => {
 			request(app)
-				.put(`/event/register/${event._id}`)
+				.put(`/event/register/${reg._id}/${cat2._id}`)
 				.set('authorization', userToken)
-				.send({
-					category: cat2
-				})
 				.end((err, res) => {
 					Registration.findById(res.body._id)
 						.populate({ path: 'category', model: 'category' })
@@ -246,11 +240,11 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('DELETE to /event/register/:event_id removes the registration', done => {
+	it('DELETE to /event/register/:registration_id removes the registration', done => {
 		createRegistration(userToken, event._id, cat1)
 			.then(reg => {
 				request(app)
-					.delete(`/event/register/${event._id}`)
+					.delete(`/event/register/${reg._id}`)
 					.set('authorization', userToken)
 					.end((err, res) => {
 

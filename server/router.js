@@ -30,9 +30,9 @@ module.exports = function(app) {
 	app.delete('/meal/order/:order_id', requireAuth, UserController.deleteMealOrder);
 
 	app.get('/event/register/:registration_id', requireAuth, UserController.getRegistrationInfo);
-	app.post('/event/register/:event_id', requireAuth, UserController.registerForEvent);
-	app.put('/event/register/:event_id', requireAuth, UserController.updateRegistration);
-	app.delete('/event/register/:event_id', requireAuth, UserController.deleteRegistration);
+	app.post('/event/register/:event_id/:category_id', requireAuth, UserController.registerForEvent);
+	app.put('/event/register/:registration_id/:category_id', requireAuth, UserController.updateRegistration);
+	app.delete('/event/register/:registration_id', requireAuth, UserController.deleteRegistration);
 
 	app.get('/test', function(req, res) {
 		res.send("test success!");   
