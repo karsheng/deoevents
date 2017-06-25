@@ -8,22 +8,32 @@ module.exports = {
 		const { user } = req;
 
 		Category.findById(category_id)
+		.populate({ path: 'event', model: 'event' })
 		.then(category => {
-			category.checkEligibility(user.dateOfBirth, user.gender, function(isEligible) {
-				if (isEligible) {
-					const registration = new Registration({
-						user: req.user._id,
-						event: event_id,
-						category
+			// checks if category is still open for registration
+			Registration.checkStatus(category, function(err, isOpen) {
+				if (err) return next(err);
+				console.log('isOpen', isOpen);
+				if (isOpen) {
+					// check if user is eligible for the category - age and gender
+					category.checkEligibility(user, function(isEligible) {
+						if (isEligible) {
+							const registration = new Registration({
+								user: req.user._id,
+								event: event_id,
+								category
+							});
+
+							registration.save()
+								.then(reg => res.json(reg))
+								.catch(next);
+						} else {
+							res.status(422).send({ message: 'You cannot register for this category' });
+						}
 					});
-
-					registration.save()
-						.then(reg => res.json(reg))
-						.catch(next);
 				} else {
-					res.status(422).send({ error: 'You cannot register for this category' });
+					res.status(422).send({ message: 'Registration for this category is closed'});
 				}
-
 			});
 		})
 		.catch(next);
@@ -48,17 +58,17 @@ module.exports = {
 
 		Category.findById(category_id)
 		.then(category => {
-			category.checkEligibility(user.dateOfBirth, user.gender, function(isEligible) {
+			category.checkEligibility(user, function(isEligible) {
 				if (isEligible) {
 					Registration.findOneAndUpdate(
-						{ _id : registration_id, user: req.user._id },
+						{ _id : registration_id, user: user },
 						{ category },
 						{ new: true }			
 					)
 					.then(reg => res.json(reg))
 					.catch(next);
 				} else {
-					res.status(422).send({ error: 'You cannot register for this category' });
+					res.status(422).send({ message: 'You cannot register for this category' });
 				}
 			});
 		})
