@@ -21,6 +21,9 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'interest'
     }],
+    dateOfBirth: {
+        type: Date
+    },
 	isAdmin: {
 		type: Boolean,
 		default: false

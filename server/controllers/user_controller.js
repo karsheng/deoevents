@@ -1,20 +1,32 @@
 const Registration = require('../models/registration');
 const Order = require('../models/order');
+const Category = require('../models/category');
 
 module.exports = {
 	registerForEvent(req, res, next) {
 		const { event_id } = req.params;
 		const { category } = req.body;
 
-		const registration = new Registration({
-			user: req.user._id,
-			event: event_id,
-			category
-		});
+		Category.findById(category)
+		.then(cat => {
+			cat.checkAge(req.user.dateOfBirth, function(ageIsValid) {
+				if (ageIsValid) {
+					const registration = new Registration({
+						user: req.user._id,
+						event: event_id,
+						category
+					});
 
-		registration.save()
-			.then(reg => res.json(reg))
-			.catch(next);
+					registration.save()
+						.then(reg => res.json(reg))
+						.catch(next);
+				} else {
+					res.status(422).send({ error: 'You cannot register for this category' })
+				}
+
+			});
+		})
+		.catch(next);
 	},
 	getRegistrationInfo(req, res, next) {
 		const { registration_id } = req.params;

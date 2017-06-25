@@ -89,7 +89,8 @@ describe('User Controller', function(done) {
 									'San Francisco',
 									45720,
 									'U.S.',
-									[int1, int2, int3, int4]
+									[int1, int2, int3, int4],
+									new Date(1988, 1, 2)
 								)
 								.then(ut => {
 									userToken = ut;

@@ -14,6 +14,24 @@ const CategorySchema = new Schema({
 	}
 });
 
+CategorySchema.methods.checkAge = function(dateOfBirth, cb) {
+	const category = this;
+	const age = _calculateAge(dateOfBirth);
+
+	if (age >= category.ageMin && age <= category.ageMax) {
+		return cb(true);
+	}
+
+	return cb(false);
+}
+
+function _calculateAge(birthday) { 
+  const ageDifMs = Date.now() - birthday.getTime();
+  const ageDate = new Date(ageDifMs);
+  return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
+
 const Category = mongoose.model('category', CategorySchema);
 
 module.exports = Category;

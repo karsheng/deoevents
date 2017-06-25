@@ -26,7 +26,8 @@ module.exports = {
 			city,
 			postcode,
 			country,
-			interests
+			interests,
+			dateOfBirth
 		} = req.body;
 
 		if (!email || !password) {
@@ -56,7 +57,8 @@ module.exports = {
 				city,
 				postcode,
 				country,
-				interests
+				interests,
+				dateOfBirth
 			});
 
 			user.save(function(err) {
@@ -122,7 +124,8 @@ module.exports = {
 			city,
 			postcode,
 			country,
-			interests
+			interests,
+			dateOfBirth
 		} = req.body;
 
 		User.findByIdAndUpdate(
@@ -136,11 +139,12 @@ module.exports = {
 				city,
 				postcode,
 				country,
-				interests
+				interests,
+				dateOfBirth
 			},
 			{ new: true }
 		)
-		.select('name gender address1 address2 address3 city postcode country interests')
+		.select('name gender address1 address2 address3 city postcode country interests dateOfBirth')
 		.then(user => {
 			res.json(user);
 		})
