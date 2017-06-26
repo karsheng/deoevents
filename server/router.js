@@ -3,6 +3,7 @@ const UserController = require('./controllers/user_controller');
 const AdminAuthController = require('./controllers/admin_auth_controller');
 const AdminController = require('./controllers/admin_controller');
 const PublicController = require('./controllers/public_controller');
+const PayPalPaymentController = require('./controllers/paypal_payment_controller');
 const passportService = require('./services/passport');
 const passport = require('passport');
 
@@ -33,6 +34,8 @@ module.exports = function(app) {
 	app.post('/event/register/:event_id/:category_id', requireAuth, UserController.registerForEvent);
 	app.put('/event/register/:registration_id/:category_id', requireAuth, UserController.updateRegistration);
 	app.delete('/event/register/:registration_id', requireAuth, UserController.deleteRegistration);
+
+	app.post('/paypal/create-payment/:registration_id', requireAuth, PayPalPaymentController.createPayment);
 
 	app.get('/test', function(req, res) {
 		res.send("test success!");   

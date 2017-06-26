@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Event = mongoose.model('event');
 const Associate = mongoose.model('associate');
 
-module.exports ={
+module.exports = {
 	getEvent(req, res, next) {
 		const { event_id } = req.params;
 

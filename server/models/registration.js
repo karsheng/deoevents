@@ -41,6 +41,40 @@ RegistrationSchema.statics.checkStatus = function(user, category, cb) {
 		});
 };
 
+RegistrationSchema.statics.getTotalBill = function(registration_id, user, cb) {
+	var	reg_bill = 0,
+			orders_bill = 0
+
+	this.
+		findOne({
+			_id: registration_id,
+			user
+		})
+		.populate({ path: 'category', model: 'category' })
+		.exec(function(err, reg) {
+			if (err) return cb(err);
+
+			if (reg) { reg_bill = reg.category.price; }
+			
+			Order.find({
+				registration: registration_id,
+				user
+			})
+			.populate({ path: 'meal', model: 'meal' })
+			.exec(function(err, orders) {
+				if (err) return cb(err);
+
+				orders_bill = orders.reduce(function(total, order) {
+					return total + order.meal.price * order.quantity;
+				}, 0);
+				
+				const total_bill = reg_bill + orders_bill
+				
+				return cb(null, total_bill);
+			});
+		});	
+};
+
 const Registration = mongoose.model('registration', RegistrationSchema);
 
 module.exports = Registration;
