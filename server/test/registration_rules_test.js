@@ -8,6 +8,8 @@ const createEvent = require('../helper/create_event_helper');
 const createCategory = require('../helper/create_category_helper');
 const createRegistration = require('../helper/create_registration_helper');
 const updateEvent = require('../helper/update_event_helper');
+const createPayPalPayment = require('../helper/create_paypal_payment_helper');
+const executePayPalPayment = require('../helper/execute_paypal_payment_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
@@ -141,16 +143,22 @@ describe('Registration Rules', function(done) {
 		});		
 	});
 
-	xit('Returns error if user tries to register for an event and the participantLimit is met', done => {
+	it('Returns error if user tries to register for an event and the participantLimit is met', done => {
 		createRegistration(userToken1, event._id, cat4)
-		.then( _ => {
-			request(app)
-				.post(`/event/register/${event._id}/${cat4._id}`)
-				.set('authorization', userToken2)
-				.end((err, res) => {
-					assert(res.body.message === 'Registration for this category is closed');
-					done();
+		.then(registration => {
+			createPayPalPayment(userToken1, registration)
+			.then(paypalObj => {
+				executePayPalPayment(userToken1, registration, paypalObj.paymentID, 'payer_id')
+				.then(payment => {
+					request(app)
+						.post(`/event/register/${event._id}/${cat4._id}`)
+						.set('authorization', userToken2)
+						.end((err, res) => {
+							assert(res.body.message === 'Registration for this category is closed');
+							done();
+						});
 				});
+			});
 		});
 	});
 });

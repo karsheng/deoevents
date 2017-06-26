@@ -128,6 +128,10 @@ describe('PayPal Payment Controller', function(done){
 					request(app)
 						.post(`/paypal/execute-payment/${registration._id}`)
 						.set('authorization', userToken)
+						.send({
+							payment_id: paypalObj.paymentID, 
+							payer_id: 'payer_id'
+						})
 						.end((err, res) => {
 							Payment.findById(res.body._id)
 							.populate({ path: 'registration', model: 'registration' })
