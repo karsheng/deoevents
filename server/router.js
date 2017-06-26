@@ -36,6 +36,7 @@ module.exports = function(app) {
 	app.delete('/event/register/:registration_id', requireAuth, UserController.deleteRegistration);
 
 	app.post('/paypal/create-payment/:registration_id', requireAuth, PayPalPaymentController.createPayment);
+	app.post('/paypal/execute-payment/:registration_id', requireAuth, PayPalPaymentController.executePayment);
 
 	app.get('/test', function(req, res) {
 		res.send("test success!");   
