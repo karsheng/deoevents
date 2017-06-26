@@ -13,45 +13,68 @@ const executePayPalPayment = require('../helper/execute_paypal_payment_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
-describe('Registration Rules', function(done) {
+describe.only('Registration Rules', function(done) {
 	this.timeout(20000);
-	var event;
+	var event1, event2;
 	var adminToken, userToken1, userToken2;
 	var cat1, cat2, cat3, cat4;
+	var cat5;
 
 	beforeEach(done => {
 		createAdmin('admin@deo.com', 'qwerty123')
 		.then(at => {
 			adminToken = at;
-			createEvent(adminToken, 'Event 1')
-			.then(e => {
+			Promise.all([
+				createEvent(adminToken, 'Event 1'),
+				createEvent(adminToken, 'Event 2')
+			])
+			.then(events => {
 				Promise.all([
-					createCategory(adminToken, '5km Male 21 to 48', 50, true, 21, 48, 1000, e),
-					createCategory(adminToken, '5km Female 48 and above ', 50, false, 48, 999, 1000, e),
-					createCategory(adminToken, '10km Male 48 and above ', 50, true, 48, 999, 1000, e),
-					createCategory(adminToken, '10km Male 18 and above exclusive', 50, true, 18, 999, 1, e)
+					createCategory(adminToken, '5km Male 21 to 48', 50, true, 21, 48, 1000, events[0]),
+					createCategory(adminToken, '5km Female 48 and above ', 50, false, 48, 999, 1000, events[0]),
+					createCategory(adminToken, '10km Male 48 and above ', 50, true, 48, 999, 1000, events[0]),
+					createCategory(adminToken, '10km Male 18 and above exclusive', 50, true, 18, 999, 1, events[0]),
+					createCategory(adminToken, '10km Male 21 and above (closed) ', 50, true, 21, 999, 1000, events[1]),
 				])
 				.then(cats => {
 					cat1 = cats[0];
 					cat2 = cats[1];
 					cat3 = cats[2];
 					cat4 = cats[3];
-					updateEvent(
-						adminToken,
-						e._id,
-						'Test Event',
-						new Date().getTime(),
-						'Test Location',
-						3.123,
-						101.123,
-						faker.lorem.paragraphs(),
-						faker.image.imageUrl(),
-						[cat1, cat2, cat3, cat4],
-						[],
-						true
-					)
-					.then(updatedEvent => {
-						event = updatedEvent;
+					cat5 = cats[4];
+					Promise.all([
+						updateEvent(
+							adminToken,
+							events[0]._id,
+							'Test Event 1',
+							new Date().getTime(),
+							'Test Location',
+							3.123,
+							101.123,
+							faker.lorem.paragraphs(),
+							faker.image.imageUrl(),
+							[cat1, cat2, cat3, cat4],
+							[],
+							true
+						),
+						updateEvent(
+							adminToken,
+							events[1]._id,
+							'Test Event 2',
+							new Date().getTime(),
+							'Test Location',
+							3.123,
+							101.123,
+							faker.lorem.paragraphs(),
+							faker.image.imageUrl(),
+							[cat5],
+							[],
+							false
+						)
+					])
+					.then(updatedEvents => {
+						event1 = updatedEvents[0];
+						event2 = updatedEvents[1];
 						Promise.all([
 							createUser(
 								'Gavin Belson',
@@ -95,7 +118,7 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user age does not fall within allowable age range', done => {
 		request(app)
-			.post(`/event/register/${event._id}/${cat1._id}`)
+			.post(`/event/register/${event1._id}/${cat1._id}`)
 			.set('authorization', userToken1)
 			.end((err, res) => {
 				// user born in 1957, age limit is 21 to 48
@@ -107,7 +130,7 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user gender does not match category gender requirement', done => {
 		request(app)
-			.post(`/event/register/${event._id}/${cat2._id}`)
+			.post(`/event/register/${event1._id}/${cat2._id}`)
 			.set('authorization', userToken1)
 			.end((err, res) => {
 				// user is male, cat2 is for female
@@ -118,7 +141,7 @@ describe('Registration Rules', function(done) {
 	});
 
 	it('Returns error if user tries to change to a category which they are not eligible for', done => {
-		createRegistration(userToken1, event._id, cat3)
+		createRegistration(userToken1, event1._id, cat3)
 		.then(reg => {
 			request(app)
 				.put(`/event/register/${reg._id}/${cat2._id}`)
@@ -131,10 +154,10 @@ describe('Registration Rules', function(done) {
 	});
 
 	it('Returns error if user tries to register to the same event more than once', done => {
-		createRegistration(userToken1, event._id, cat3)
+		createRegistration(userToken1, event1._id, cat3)
 		.then(reg => {
 			request(app)
-				.post(`/event/register/${event._id}/${cat3._id}`)
+				.post(`/event/register/${event1._id}/${cat3._id}`)
 				.set('authorization', userToken1)
 				.end((err, res) => {
 					assert(res.body.message === 'User already registered');
@@ -144,14 +167,14 @@ describe('Registration Rules', function(done) {
 	});
 
 	it('Returns error if user tries to register for an event and the participantLimit is met', done => {
-		createRegistration(userToken1, event._id, cat4)
+		createRegistration(userToken1, event1._id, cat4)
 		.then(registration => {
 			createPayPalPayment(userToken1, registration)
 			.then(paypalObj => {
 				executePayPalPayment(userToken1, registration, paypalObj.paymentID, 'payer_id')
 				.then(payment => {
 					request(app)
-						.post(`/event/register/${event._id}/${cat4._id}`)
+						.post(`/event/register/${event1._id}/${cat4._id}`)
 						.set('authorization', userToken2)
 						.end((err, res) => {
 							assert(res.body.message === 'Registration for this category is closed');
@@ -160,5 +183,15 @@ describe('Registration Rules', function(done) {
 				});
 			});
 		});
+	});
+
+	it('Returns error if user tries to register for an event that is already closed', done => {
+		request(app)
+			.post(`/event/register/${event2._id}/${cat5._id}`)
+			.set('authorization', userToken2)
+			.end((err, res) => {
+				assert(res.body.message === 'Registration for this category is closed');
+				done();
+			});
 	});
 });
