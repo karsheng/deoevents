@@ -13,7 +13,7 @@ const executePayPalPayment = require('../helper/execute_paypal_payment_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
-describe.only('Registration Rules', function(done) {
+describe('Registration Rules', function(done) {
 	this.timeout(20000);
 	var event1, event2;
 	var adminToken, userToken1, userToken2;
