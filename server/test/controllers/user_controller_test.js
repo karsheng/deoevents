@@ -255,5 +255,5 @@ describe('User Controller', function(done) {
 							});
 					});
 			});
-	});
+		});
 });

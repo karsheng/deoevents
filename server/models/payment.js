@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Registration = require('./registration');
 const Order = require('./order');
+const User = require('./user');
 
 const PaymentSchema = new Schema(
 	{
@@ -32,7 +33,7 @@ PaymentSchema.pre('save', function(next) {
 			payment.registration,
 			{ paid: true }
 		)
-		.exec(function(err, regs) {
+		.exec(function(err, registration) {
 			if (err) { return next(err); }
 
 			Order.update(
@@ -47,7 +48,18 @@ PaymentSchema.pre('save', function(next) {
 					.exec(function(err, orders) {
 						if (err) { return next(err); }
 						payment.orders = orders;
-						next();
+
+						User
+							.findById(payment.user)
+							.exec(function(err, user) {
+								if (err) { return next(err); }
+								user.registrations.push(payment.registration);
+								user.save()
+									.then(_ => {
+										next();
+									})
+									.catch(next)
+							});
 					});
 			});
 		});

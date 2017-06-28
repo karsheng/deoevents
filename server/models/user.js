@@ -17,6 +17,10 @@ const UserSchema = new Schema({
 	city: { type: String },
 	postcode: { type: String },
 	country: { type: String },
+	registrations: [{
+		type: Schema.Types.ObjectId,
+		ref: 'registration'
+	}],
 	interests: [{
 		type: Schema.Types.ObjectId,
 		ref: 'interest'

@@ -136,12 +136,14 @@ describe('PayPal Payment Controller', function(done){
 							Payment.findById(res.body._id)
 							.populate({ path: 'registration', model: 'registration' })
 							.populate({ path: 'orders', model: 'order' })
+							.populate({ path: 'user', model: 'user' })
 							.then(payment => {
 								assert(payment.registration.paid === true);
 								assert(payment.orders[0].paid === true);
 								assert(payment.orders[1].paid === true);
 								assert(payment.amount === 80);
 								assert(payment.currency === 'MYR');
+								assert(payment.user.registrations[0].toString() === registration._id.toString());
 								done();
 							});
 						});
