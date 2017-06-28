@@ -153,6 +153,35 @@ describe('User Auth Controller', function(done){
 		});
 	});
 
+	it('GET to /profile returns profile of the user', done => {
+		createUser(
+			'Gavin Belson',
+			'gavin@hooli.com',
+			'qwerty123',
+			true,
+			'100 Hooli Road',
+			'Silicon Valley',
+			'Palo Alto',
+			'San Francisco',
+			45720,
+			'U.S.',
+			[int1, int2, int3, int4]
+		)
+		.then(token => {
+			request(app)
+				.get('/profile')
+				.set('authorization', token)
+				.end((err, res) => {
+					assert(res.body.name === 'Gavin Belson');
+					assert(res.body.password === undefined);
+					assert(res.body.isAdmin === undefined);
+					assert(res.body.loginAttempts === undefined);
+					assert(res.body.interests[0].name === '5km');
+					done();
+				});
+		});
+	});
+
 	it('PUT to /profile updates the profile of the user', done => {
 		createUser(
 			'Gavin Belson',
@@ -172,7 +201,7 @@ describe('User Auth Controller', function(done){
 				.put('/profile')
 				.set('authorization', token)
 				.send({
-					name: 'Gavin Fucking Belson',
+					name: 'Gavin Smelson',
 					email: 'gavin@hooli.com',
 					gender: false,
 					address1: '200 Belson Road',
@@ -184,7 +213,7 @@ describe('User Auth Controller', function(done){
 					interests: [int3, int4]
 				})
 				.end((err, res) => {
-					User.findOne({ name: 'Gavin Fucking Belson'})
+					User.findOne({ name: 'Gavin Smelson'})
 						.then(user => {
 							assert(res.body.password === undefined);
 							assert(user.email === 'gavin@hooli.com');

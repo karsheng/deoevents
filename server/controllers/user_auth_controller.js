@@ -114,6 +114,23 @@ module.exports = {
 
 		});
 	},
+	getProfile(req, res, next) {
+		User.findById(req.user._id)
+			.populate({ 
+				path: 'registrations', 
+				model: 'registration',
+				populate: {
+					path: 'event',
+					model: 'event'
+				}
+			})
+			.populate({ path: 'interests', model: 'interest' })
+			.select('-password -loginAttempts -isAdmin')
+			.then(user => {
+				res.json(user);
+			})
+			.catch(next);
+	},
 	updateProfile(req, res, next) {
 		const {
 			name, 
