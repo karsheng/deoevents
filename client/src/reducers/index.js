@@ -1,17 +1,12 @@
 import { combineReducers } from 'redux';
 import { reducer as form } from 'redux-form';
-import auth from './auth_reducer';
-import events from './event_reducer';
-import user from './user_reducer';
-import user_events from './user_events_reducer';
-
+import authReducer from './auth_reducer';
+import eventReducer from './event_reducer';
 
 const rootReducer = combineReducers({
   form,
-  auth,
-  events,
-  user,
-  user_events
+  auth : authReducer,
+  events: eventReducer,
 });
 
 export default rootReducer;

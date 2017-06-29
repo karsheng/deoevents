@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import * as actions from '../../actions'; 
+import * as actions from '../../actions/auth_actions'; 
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -21,11 +21,10 @@ class Signin extends Component {
 		);
 	}
 
-
 	handleFormSubmit({ email, password }) {
 		// Need to do something to sign user in
 		this.props.signinUser({ email, password }, () => {
-      this.props.history.push('/feature');			
+      this.props.history.push('/');
 		});
 	}
 

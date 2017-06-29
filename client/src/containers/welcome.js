@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions/events';
+import * as actions from '../actions/event_actions';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import { GridList, GridTile } from 'material-ui/GridList';
@@ -38,19 +38,19 @@ class WelcomePage extends Component {
 	componentWillMount() {
 		this.props.fetchEvents();
 	}
-	renderEvents(){
+	renderEvents() {
 		const events =  _.map(this.props.events, (event) => {
 			if (event.open) {
 				return(
 					<GridTile
-						key={event.id}
+						key={event._id}
 						titleStyle={styles.titleStyle}
-						containerElement={<Link className="welcome-event-text" to={"/events/" + event.id}></Link>}
+						containerElement={<Link className="welcome-event-text" to={"/event/" + event._id}></Link>}
 					>
-						<img src={event.poster_small} alt=""/>
+						<img src={event.imageUrl} alt=""/>
 							<p>{event.name}</p>
 							<p>{event.formattedDate}</p>
-							<p>{event.venue}</p>
+							<p>{event.address}</p>
 					</GridTile>
 				);				
 			}

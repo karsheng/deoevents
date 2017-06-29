@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
-import * as actions from '../../actions';
+import * as actions from '../../actions/auth_actions';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -22,7 +22,7 @@ class Signup extends Component {
   handleFormSubmit(formProps) {
     // Call action creator to sign up the user!
     this.props.signupUser(formProps, () => {
-      this.props.history.push('/feature');
+      this.props.history.push('/');
     });
   }
 
@@ -44,6 +44,13 @@ class Signup extends Component {
       <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
         <h2>Sign Up</h2>
         <Field 
+          label="Name:"
+          type="text"
+          name="name"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
           label="Email:"
           type="text"
           name="email"
@@ -61,6 +68,70 @@ class Signup extends Component {
           label="Confirm Password:"
           type="password"
           name="passwordConfirm"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Gender:"
+          type="text"
+          name="gender"
+          value={true}
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Address 1:"
+          type="text"
+          name="address1"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Address 2:"
+          type="text"
+          name="address2"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Address 3:"
+          type="text"
+          name="address3"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="City:"
+          type="text"
+          name="city"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Postcode:"
+          type="text"
+          name="postcode"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Country:"
+          type="text"
+          name="country"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Interests:"
+          type="text"
+          name="interests"
+          component={this.renderField}
+        />
+        <br/>
+        <Field 
+          label="Date of Birth:"
+          type="text"
+          name="dateOfBirth"
           component={this.renderField}
         />
         <br/>

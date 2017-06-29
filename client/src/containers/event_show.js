@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../actions/events';
+import * as actions from '../actions/event_actions';
 import { Link } from 'react-router-dom';
 import CircularProgress from 'material-ui/CircularProgress';
 import ReactSVG from 'react-svg';
@@ -13,9 +13,9 @@ import GoogleMap from '../components/google_map';
 
 class EventShow extends Component {
 	renderRegisterButton(event, user_events) {
-		if (event.open && !user_events[event.id]) {
+		if (event.open) {
 			return(
-				<FlatButton primary={true} containerElement={<Link to={"/reg-event/" + event.id} />} >Register</FlatButton>
+				<FlatButton primary={true} disabled={true}>Register</FlatButton>
 			);
 		} else {
 			return(
@@ -23,12 +23,12 @@ class EventShow extends Component {
 			);
 		}
 	}
-	renderAirbnbButton(venue) {
+	renderAirbnbButton(address) {
 		return(
 			<IconButton
 				style={{padding: 0}}
 				iconStyle={{width: 36, height: 36}}
-				href={"https://airbnb.com/s/" + venue}
+				href={"https://airbnb.com/s/" + address}
 				target="_blank"
 			>
 				<ReactSVG 
@@ -37,12 +37,12 @@ class EventShow extends Component {
 			</IconButton>
 		)
 	}
-	renderBookingButton(venue) {
+	renderBookingButton(address) {
 		return(
 			<IconButton
 				style={{padding: 0}}
 				iconStyle={{width: 60, height: 36}}
-				href={"https://www.booking.com/search.html?ss=" + venue}
+				href={"https://www.booking.com/search.html?ss=" + address}
 				target="_blank"
 			>
 				<ReactSVG 
@@ -52,9 +52,9 @@ class EventShow extends Component {
 		)	
 	}
 
-	componentDidMount() {
-    const { id } = this.props.match.params;
-		this.props.fetchEvent(id);
+	componentWillMount() {
+    const { _id } = this.props.match.params;
+		this.props.fetchEvent(_id);
 	}
 	render() {
 		const { event, user_events } = this.props;
@@ -66,16 +66,16 @@ class EventShow extends Component {
 		return (
 			<Card>
 				<CardMedia>
-					<img src={event.main_img} alt=""/>
+					<img src={event.imageUrl} alt=""/>
 				</CardMedia>
-				<CardTitle title={event.name} subtitle={event.venue + '  |  ' + event.formattedDate} />
+				<CardTitle title={event.name} subtitle={event.address + '  |  ' + event.formattedDate} />
 				<CardText>
 					{event.description}
 				</CardText>
 				<CardActions>
 					{this.renderRegisterButton(event, user_events)}	
-					{this.renderAirbnbButton(event.venue)}	
-					{this.renderBookingButton(event.venue)}
+					{this.renderAirbnbButton(event.address)}	
+					{this.renderBookingButton(event.address)}
 				</CardActions>
 				<CardMedia>
 					<GoogleMap lat={event.lat} lng={event.lng} />
@@ -87,8 +87,7 @@ class EventShow extends Component {
 
 function mapStateToProps(state, ownProps) {
 	return {
-		event: state.events[ownProps.match.params.id],
-		user_events: state.user_events
+		event: state.events[ownProps.match.params._id]
 	};
 }
 

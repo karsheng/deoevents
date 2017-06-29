@@ -118,7 +118,6 @@ module.exports = {
 		User.findById(req.user._id)
 			.populate({ 
 				path: 'registrations', 
-				model: 'registration',
 				populate: {
 					path: 'event',
 					model: 'event'

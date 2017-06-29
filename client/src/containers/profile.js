@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchUserEvents } from '../actions/user';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 import Paper from 'material-ui/Paper';
-import Avatar from 'material-ui/Avatar';
 import Chip from 'material-ui/Chip';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import {List, ListItem} from 'material-ui/List';
@@ -32,35 +30,33 @@ class UserProfile extends Component {
 	renderUserInterests(interests) {
 		return interests.map((interest) => {
 			return(
-				<Chip style={{margin: '4px auto'}} key={interest}>{interest}</Chip>
+				<Chip style={{margin: '4px auto'}} key={interest.name}>{interest.name}</Chip>
 			);
 		});
 	}
 
-	renderUpcomingEvents() {
-		const { user_events } = this.props;
-		return _.map(user_events, (event) => {
-			if (event.open) {
+	renderUpcomingEvents(registrations) {
+		return _.map(registrations, (reg) => {
+			if (reg.event.open) {
 				return(
       		<ListItem 
-      			primaryText={event.event_name} 
-      			containerElement={<Link to={"/events/" + event.event_id} />} 
-      			key={event.event_id}
+      			primaryText={reg.event.name} 
+      			containerElement={<Link to={"/event/" + reg.event._id} />} 
+      			key={reg.event._id}
       		/>
 				);
 			}
 		});
 	}
 
-	renderClosedEvents() {
-		const { user_events } = this.props;
-		return _.map(user_events, (event) => {
-			if (!event.open) {
+	renderClosedEvents(registrations) {
+		return _.map(registrations, (reg) => {
+			if (!reg.event.open) {
 				return(
       		<ListItem 
-      			primaryText={event.event_name} 
-      			containerElement={<Link to={"/events/" + event.event_id} />} 
-      			key={event.event_id}
+      			primaryText={reg.event.name} 
+      			containerElement={<Link to={"/event/" + reg.event._id} />} 
+      			key={reg.event._id}
       		/>
 				);
 			}
@@ -69,17 +65,13 @@ class UserProfile extends Component {
 
 	render() {
 		const { user } = this.props;
+		if (!user) return <div>loading...</div>
 		return(
 			<div>
 				<h2>Profile</h2>
     		<Paper style={style} zDepth={5} >
     			<br/>
-        	<Avatar
-          	src="https://scontent-kut2-1.cdninstagram.com/t51.2885-19/s150x150/15275658_1838002483152296_2565393088411336704_a.jpg"
-          	size={150}
-          	style={{margin: 5}}
-        	/>
-					<h3>{user.firstName + " " + user.lastName}</h3>
+					<h3>{user.name}</h3>
 					<br/>
 					<h4>Address</h4>
 					<p>{user.address1}</p>
@@ -98,14 +90,14 @@ class UserProfile extends Component {
     			<Tab label="Upcoming Events">
     				<Paper style={style}>
 							<List>
-								{this.renderUpcomingEvents()}	
+								{this.renderUpcomingEvents(user.registrations)}	
 							</List>
 						</Paper>
     			</Tab>
     			<Tab label="Closed Events">
     				<Paper style={style}>
 	    				<List>
-								{this.renderClosedEvents()}	
+								{this.renderClosedEvents(user.registrations)}	
 							</List>
 						</Paper>
     			</Tab>
@@ -122,9 +114,8 @@ class UserProfile extends Component {
 
 function mapStateToProps(state) {
 	return {
-		user: state.user.user_info,
-		user_events: state.user_events
+		user: state.auth.info
 	};
 }
 
-export default connect(mapStateToProps, { fetchUserEvents })(UserProfile);
+export default connect(mapStateToProps)(UserProfile);
