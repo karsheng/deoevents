@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
-import Header from './containers/header';
-import Signin from './containers/auth/signin';
-import Signout from './containers/auth/signout';
-import Signup from './containers/auth/signup';
-import RequireAuth from './containers/auth/require_auth';
-import WelcomePage from './containers/welcome';
-import EventShow from './containers/event_show';
-import UserProfile from './containers/profile';
+import Header from './components/header';
+import Signin from './components/auth/signin';
+import Signout from './components/auth/signout';
+import Signup from './components/auth/signup';
+import RequireAuth from './components/auth/require_auth';
+import WelcomePage from './components/welcome';
+import EventShow from './components/event_show';
+import UserProfile from './components/profile';
 
 
 export default class App extends Component {

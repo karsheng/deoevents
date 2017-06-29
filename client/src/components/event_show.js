@@ -8,7 +8,7 @@ import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import GoogleMap from '../components/google_map';
+import GoogleMap from './google_map';
 
 
 class EventShow extends Component {
