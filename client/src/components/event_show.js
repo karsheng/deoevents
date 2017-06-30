@@ -9,13 +9,14 @@ import FontIcon from 'material-ui/FontIcon';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import GoogleMap from './google_map';
+import { formatDate } from '../helper/';
 
 
 class EventShow extends Component {
-	renderRegisterButton(event, user_events) {
+	renderRegisterButton(event) {
 		if (event.open) {
 			return(
-				<FlatButton primary={true} disabled={true}>Register</FlatButton>
+				<FlatButton primary={true}>Register</FlatButton>
 			);
 		} else {
 			return(
@@ -68,12 +69,12 @@ class EventShow extends Component {
 				<CardMedia>
 					<img src={event.imageUrl} alt=""/>
 				</CardMedia>
-				<CardTitle title={event.name} subtitle={event.address + '  |  ' + event.formattedDate} />
+				<CardTitle title={event.name} subtitle={event.address + '  |  ' + formatDate(event.datetime)} />
 				<CardText>
 					{event.description}
 				</CardText>
 				<CardActions>
-					{this.renderRegisterButton(event, user_events)}	
+					{this.renderRegisterButton(event)}	
 					{this.renderAirbnbButton(event.address)}	
 					{this.renderBookingButton(event.address)}
 				</CardActions>

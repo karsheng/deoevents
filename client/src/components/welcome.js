@@ -6,6 +6,7 @@ import _ from 'lodash';
 import { GridList, GridTile } from 'material-ui/GridList';
 import Slider from 'react-slick';
 import Divider from 'material-ui/Divider';
+import { formatDate } from '../helper/';
 
 const styles = {
   root: {
@@ -49,7 +50,7 @@ class WelcomePage extends Component {
 					>
 						<img src={event.imageUrl} alt=""/>
 							<p>{event.name}</p>
-							<p>{event.formattedDate}</p>
+							<p>{formatDate(event.datetime)}</p>
 							<p>{event.address}</p>
 					</GridTile>
 				);				
@@ -67,14 +68,16 @@ class WelcomePage extends Component {
 	        <div className="main-slider"><img src="https://www.runsociety.com/wp-content/themes/runsociety-4/images/default-event.jpg?x93482" alt=""/></div>
 	        <div className="main-slider"><img src="https://event.howei.com/sites/default/files/events/2016/SPHalf2016/sp-half-banner.jpg" alt=""/></div>
 	      </Slider>	
-			<br/>
-			<br/>
+				<br/>
+				<br/>
 				<h2>Events</h2>
 				<div style={styles.root}>
 					<GridList style={styles.gridList} cols={1.1} cellHeight="auto">
 					{this.renderEvents()}
 					</GridList>	
 				</div>
+				<br/>
+				<br/>
 			</div>
 		);
 	}

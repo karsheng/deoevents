@@ -5,7 +5,8 @@ import _ from 'lodash';
 import Paper from 'material-ui/Paper';
 import Chip from 'material-ui/Chip';
 import { Tabs, Tab } from 'material-ui/Tabs';
-import {List, ListItem} from 'material-ui/List';
+import { List, ListItem } from 'material-ui/List';
+import { formatDate } from '../helper/';
 
 
 const style = {
@@ -30,7 +31,7 @@ class UserProfile extends Component {
 	renderUserInterests(interests) {
 		return interests.map((interest) => {
 			return(
-				<Chip style={{margin: '4px auto'}} key={interest.name}>{interest.name}</Chip>
+				<Chip style={{margin: '4px auto'}} key={interest}>{interest}</Chip>
 			);
 		});
 	}
@@ -73,12 +74,17 @@ class UserProfile extends Component {
     			<br/>
 					<h3>{user.name}</h3>
 					<br/>
+					<h4>Date of Birth</h4>
+					<p>{formatDate(user.dateOfBirth)}</p>
+					<br/>
 					<h4>Address</h4>
 					<p>{user.address1}</p>
 					<p>{user.address2}</p>
 					<p>{user.address3}</p>
+					<p>{user.postcode} {user.city}</p>
+					<p>{user.country}</p>
 					<br/>
-					<h4>Interest</h4>
+					<h4>Interests</h4>
 					{this.renderUserInterests(user.interests)}
 					<br/>
 					<br/>

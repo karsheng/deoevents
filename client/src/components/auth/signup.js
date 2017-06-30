@@ -3,24 +3,73 @@ import { Field, reduxForm } from 'redux-form';
 import * as actions from '../../actions/auth_actions';
 import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
+import RaisedButton from 'material-ui/RaisedButton'
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+import DatePicker from 'material-ui/DatePicker';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
+import { COUNTRIES } from '../../constants';
+import AutoComplete from 'material-ui/AutoComplete';
+
+const renderMenuItem = (itemArray) => {
+  return itemArray.map(itemValue => {
+    return <MenuItem key={itemValue} value={itemValue} primaryText={itemValue} />
+  });
+};
+
+const renderRadioGroup = ({ input, ...rest }) => (
+  <RadioButtonGroup
+    {...input}
+    {...rest}
+    valueSelected={input.value}
+    onChange={(event, value) => input.onChange(value)}
+  />
+);
+
+const renderSelectField = ({
+  input,
+  label,
+  meta: { touched, error },
+  children,
+  multiple,
+  ...custom
+}) => (
+  <SelectField
+    multiple={multiple}
+    floatingLabelText={label}
+    errorText={touched && error}
+    {...input}
+    onChange={(event, index, value) => input.onChange(value)}
+    children={children}
+    {...custom}
+  />
+);
+
+const renderDatePicker = ({ input, label, meta: { touched, error }, ...custom }) => {
+  return (
+    <DatePicker
+      onChange={(e, val) => {return input.onChange(val)}}
+      {...custom}
+      value={(input.value) ? input.value : {}}
+    />
+  );
+};
+
+const renderField = (field) => {
+  const { meta: { touched, error } } = field;
+  return(
+    <TextField hintText={field.label}
+      floatingLabelText={field.label}
+      errorText={touched && error}
+      type={field.type}
+      {...field.input}
+    />
+  );
+}
 
 class Signup extends Component {
-  renderField(field) {
-    const { meta: { touched, error } } = field;
-    
-    return(
-      <TextField hintText={field.label}
-        floatingLabelText={field.label}
-        errorText={field.touched && field.error}
-        type={field.type}
-        {...field.input}
-      />
-    );    
-  }
 
   handleFormSubmit(formProps) {
-    // Call action creator to sign up the user!
     this.props.signupUser(formProps, () => {
       this.props.history.push('/');
     });
@@ -47,92 +96,95 @@ class Signup extends Component {
           label="Name:"
           type="text"
           name="name"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="Email:"
           type="text"
           name="email"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="Password:"
           type="password"
           name="password"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="Confirm Password:"
           type="password"
           name="passwordConfirm"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
-        <Field 
-          label="Gender:"
-          type="text"
-          name="gender"
-          value={true}
-          component={this.renderField}
-        />
+        <Field name="gender" component={renderRadioGroup}>
+          <RadioButton value={true} label="male" />
+          <RadioButton value={false} label="female" />
+        </Field>
         <br/>
         <Field 
           label="Address 1:"
           type="text"
           name="address1"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="Address 2:"
           type="text"
           name="address2"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="Address 3:"
           type="text"
           name="address3"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="City:"
           type="text"
           name="city"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
         <Field 
           label="Postcode:"
           type="text"
           name="postcode"
-          component={this.renderField}
+          component={renderField}
         />
         <br/>
-        <Field 
-          label="Country:"
-          type="text"
+        <Field
           name="country"
-          component={this.renderField}
-        />
+          component={renderSelectField}
+          label="Country"
+          multiple={false}
+        >
+          {renderMenuItem(COUNTRIES)}
+        </Field>
         <br/>
-        <Field 
-          label="Interests:"
-          type="text"
+        <Field
           name="interests"
-          component={this.renderField}
-        />
+          component={renderSelectField}
+          label="I am interested in:"
+          multiple={true}
+        >
+          <MenuItem value="5km" primaryText="5km" />
+          <MenuItem value="10km" primaryText="10km" />
+          <MenuItem value="Half-marathon" primaryText="Half-marathon" />
+          <MenuItem value="Full-marathon" primaryText="Full-marathon" />
+        </Field>
         <br/>
         <Field 
-          label="Date of Birth:"
-          type="text"
+          hintText="Date of Birth"
           name="dateOfBirth"
-          component={this.renderField}
+          component={renderDatePicker}
         />
         <br/>
         {this.renderAlert()}

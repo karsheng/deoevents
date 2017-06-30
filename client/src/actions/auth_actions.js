@@ -53,10 +53,10 @@ export function authError(error) {
 	};
 }
 
-export function signupUser(user_input, cb) {
+export function signupUser(formProps, cb) {
 	return function(dispatch) {
 
-		axios.post(`${ROOT_URL}/signup`, user_input)
+		axios.post(`${ROOT_URL}/signup`, formProps)
 			.then(response => {
 				localStorage.setItem('deotoken', response.data.token);
 				axios.get(
