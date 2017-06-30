@@ -2,33 +2,18 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../../app');
 const createAdmin = require('../../helper/create_admin_helper');
-const createInterest = require('../../helper/create_interest_helper');
 const createUser = require('../../helper/create_user_helper');
 const signinUser = require('../../helper/user_signin_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
 
 describe('User Auth Controller', function(done){
-	var int1, int2, int3, int4;
-
 	this.timeout(15000);
 
 	beforeEach(done => {
 		createAdmin('karsheng_88@hotmail.com', 'qwerty123')
 		.then(token => {
-			Promise.all([
-				createInterest(token, '5km'),
-				createInterest(token, '10km'),
-				createInterest(token, 'half-marathon'),
-				createInterest(token, 'full-marathon'),
-			])
-			.then(interests => {
-				int1 = interests[0];
-				int2 = interests[1];
-				int3 = interests[2];
-				int4 = interests[3];
-				done();
-			});
+			done();
 		});
 	});
 
@@ -45,14 +30,13 @@ describe('User Auth Controller', function(done){
 				address2: 'Desa Parkcity',
 				city: 'Kuala Lumpur',
 				postcode: '52200',
-				interests: [int1, int2, int3, int4]
+				interests: ['5km', '10km', 'Half-marathon', 'Full-marathon']
 			})
 			.end((err, res) => {
 				User.findOne({ name: 'Lee Kar Sheng' })
-					.populate({ path: 'interests', model: 'interest' })
 					.then(user => {
 						assert(user.email === 'karshenglee@gmail.com');
-						assert(user.interests[0].name === '5km');
+						assert(user.interests[0] === '5km');
 						done();
 					});
 			});
@@ -97,7 +81,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[int1, int2, int3, int4]
+			['5km', '10km', 'Half-marathon', 'Full-marathon']
 		)
 		.then(token => {
 			request(app)
@@ -127,7 +111,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[int1, int2, int3, int4]
+			['5km', '10km', 'Half-marathon', 'Full-marathon']
 		)
 		.then(token => {
 			request(app)
@@ -165,7 +149,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[int1, int2, int3, int4]
+			['5km', '10km', 'Half-marathon', 'Full-marathon']
 		)
 		.then(token => {
 			request(app)
@@ -176,7 +160,7 @@ describe('User Auth Controller', function(done){
 					assert(res.body.password === undefined);
 					assert(res.body.isAdmin === undefined);
 					assert(res.body.loginAttempts === undefined);
-					assert(res.body.interests[0].name === '5km');
+					assert(res.body.interests[0] === '5km');
 					done();
 				});
 		});
@@ -194,7 +178,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[int1, int2, int3, int4]
+			['5km', '10km', 'Half-marathon', 'Full-marathon']
 		)
 		.then(token => {
 			request(app)
@@ -210,7 +194,7 @@ describe('User Auth Controller', function(done){
 					city: 'San Franscisco',
 					postcode: 13576,
 					country: 'U.S.',
-					interests: [int3, int4]
+					interests: ['Half-marathon', 'Full-marathon']
 				})
 				.end((err, res) => {
 					User.findOne({ name: 'Gavin Smelson'})
@@ -237,7 +221,7 @@ describe('User Auth Controller', function(done){
 			'San Francisco',
 			45720,
 			'U.S.',
-			[int1, int2, int3, int4]
+			['5km', '10km', 'Half-marathon', 'Full-marathon']
 		)
 		.then(_ => {
 			signinUser('gavin@hooli.com', 'qwerty123')

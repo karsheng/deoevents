@@ -123,7 +123,6 @@ module.exports = {
 					model: 'event'
 				}
 			})
-			.populate({ path: 'interests', model: 'interest' })
 			.select('-password -loginAttempts -isAdmin')
 			.then(user => {
 				res.json(user);

@@ -1,26 +1,9 @@
 const Category = require('../models/category');
-const Interest = require('../models/interest');
 const Event = require('../models/event');
 const Meal = require('../models/meal');
 const Associate = require('../models/associate');
 
 module.exports = {
-	createInterest(req, res, next) {
-		const { name } = req.body;
-
-		const interest = new Interest({ name });
-
-		interest.save()
-			.then(int => res.json(int))
-			.catch(next);
-	},
-	removeInterest(req, res, next) {
-		const { interest_id } = req.params;
-
-		Interest.findByIdAndRemove(interest_id)
-		.then(int => res.json(int))
-		.catch(next);
-	},
 	createCategory(req, res, next) {
 		const {
 			name,

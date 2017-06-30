@@ -8,7 +8,6 @@ const createEvent = require('../../helper/create_event_helper');
 const updateEvent = require('../../helper/update_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
 const createOrder = require('../../helper/create_order_helper');
-const createInterest = require('../../helper/create_interest_helper');
 const createRegistration = require('../../helper/create_registration_helper');
 const faker = require('faker');
 const mongoose = require('mongoose');
@@ -19,7 +18,6 @@ describe('User Controller', function(done) {
 	this.timeout(15000);
 	var adminToken, userToken;
 	var cat1, cat2, cat3, cat4;
-	var int1, int2, int3, int4;
 	var meal1, meal2, meal3;
 	var event;
 	var order;
@@ -67,35 +65,23 @@ describe('User Controller', function(done) {
 						)
 						.then(updatedEvent => {
 							event = updatedEvent;
-							Promise.all([
-								createInterest(adminToken, '5km'),
-								createInterest(adminToken, '10km'),
-								createInterest(adminToken, 'half-marathon'),
-								createInterest(adminToken, 'full-marathon')
-							])
-							.then(interests => {
-								int1 = interests[0];
-								int2 = interests[1];
-								int3 = interests[2];
-								int4 = interests[3];
-								createUser(
-									'Gavin Belson',
-									'gavin@hooli.com',
-									'qwerty123',
-									true,
-									'100 Hooli Road',
-									'Silicon Valley',
-									'Palo Alto',
-									'San Francisco',
-									45720,
-									'U.S.',
-									[int1, int2, int3, int4],
-									new Date(1988, 1, 2)
-								)
-								.then(ut => {
-									userToken = ut;
-									done();
-								});
+							createUser(
+								'Gavin Belson',
+								'gavin@hooli.com',
+								'qwerty123',
+								true,
+								'100 Hooli Road',
+								'Silicon Valley',
+								'Palo Alto',
+								'San Francisco',
+								45720,
+								'U.S.',
+								['5km', '10km', 'Half-marathon', 'Full-marathon'],
+								new Date(1988, 1, 2)
+							)
+							.then(ut => {
+								userToken = ut;
+								done();
 							});
 						});
 					});

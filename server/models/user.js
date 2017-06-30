@@ -21,10 +21,7 @@ const UserSchema = new Schema({
 		type: Schema.Types.ObjectId,
 		ref: 'registration'
 	}],
-	interests: [{
-		type: Schema.Types.ObjectId,
-		ref: 'interest'
-	}],
+	interests: [String],
 	dateOfBirth: {
 		type: Date
 	},

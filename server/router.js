@@ -50,9 +50,6 @@ module.exports = function(app) {
 	app.post('/admin/category', adminRequireAuth, AdminController.createCategory);
 	app.delete('/admin/category/:category_id', adminRequireAuth, AdminController.removeCategory);
 
-	app.post('/admin/interest', adminRequireAuth, AdminController.createInterest);
-	app.delete('/admin/interest/:interest_id', adminRequireAuth, AdminController.removeInterest);
-
 	app.post('/admin/event', adminRequireAuth, AdminController.createEvent);
 	app.put('/admin/event/:event_id', adminRequireAuth, AdminController.updateEvent);
 	app.delete('/admin/event/:event_id', adminRequireAuth, AdminController.deleteEvent);
