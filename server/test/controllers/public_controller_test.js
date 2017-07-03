@@ -95,6 +95,7 @@ describe('Public Controller', function(done) {
 			.get(`/event/${event1._id}`)
 			.end((err, res) => {
 				assert(res.body.name === 'Event 1');
+				assert(res.body.meals[0].name === 'Food 1');
 				assert(res.body.categories[0].name === '5km');
 				assert(res.body.lat === 3.1862);
 				done();

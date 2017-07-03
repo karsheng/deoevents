@@ -7,7 +7,8 @@ import Signout from './components/auth/signout';
 import Signup from './components/auth/signup';
 import RequireAuth from './components/auth/require_auth';
 import WelcomePage from './components/welcome';
-import EventShow from './components/event_show';
+import EventPage from './components/event_page';
+import CategorySelection from './components/registration/category_selection';
 import UserProfile from './components/profile';
 
 
@@ -18,7 +19,8 @@ export default class App extends Component {
 				<Header />
 				<div className="inner-container">
 					<Switch>
-						<Route path="/event/:_id" component={EventShow} />
+						<Route path="/registration/category/:event_id" component={CategorySelection} />
+						<Route path="/event/:_id" component={EventPage} />
 						<Route path="/signin" component={Signin} />
 						<Route path="/signout" component={Signout} />
 						<Route path="/signup" component={Signup} />

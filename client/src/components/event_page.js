@@ -6,17 +6,27 @@ import CircularProgress from 'material-ui/CircularProgress';
 import ReactSVG from 'react-svg';
 import IconButton from 'material-ui/IconButton';
 import FontIcon from 'material-ui/FontIcon';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {
+	Card, CardActions, 
+	CardHeader, CardMedia, 
+	CardTitle, CardText
+} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import GoogleMap from './google_map';
 import { formatDate } from '../helper/';
 
 
-class EventShow extends Component {
-	renderRegisterButton(event) {
+class EventPage extends Component {
+	renderRegisterButton() {
+		const { event } = this.props;
 		if (event.open) {
 			return(
-				<FlatButton primary={true}>Register</FlatButton>
+				<FlatButton 
+					primary={true} 
+					containerElement={<Link to={"/registration/category/" + event._id}></Link>}
+				>
+					Register
+				</FlatButton>
 			);
 		} else {
 			return(
@@ -55,10 +65,11 @@ class EventShow extends Component {
 
 	componentWillMount() {
     const { _id } = this.props.match.params;
-		this.props.fetchEvent(_id);
+		this.props.fetchEvent(_id, _ => {});
 	}
+
 	render() {
-		const { event, user_events } = this.props;
+		const { event } = this.props;
 		if (!event) {
 			return(
 				<CircularProgress />
@@ -72,9 +83,9 @@ class EventShow extends Component {
 				<CardTitle title={event.name} subtitle={event.address + '  |  ' + formatDate(event.datetime)} />
 				<CardText>
 					{event.description}
-				</CardText>
+				</CardText>	
 				<CardActions>
-					{this.renderRegisterButton(event)}	
+					{this.renderRegisterButton()}	
 					{this.renderAirbnbButton(event.address)}	
 					{this.renderBookingButton(event.address)}
 				</CardActions>
@@ -92,4 +103,4 @@ function mapStateToProps(state, ownProps) {
 	};
 }
 
-export default connect(mapStateToProps, actions)(EventShow);
+export default connect(mapStateToProps, actions)(EventPage);

@@ -25,7 +25,7 @@ export function fetchEvents() {
 
 }
 
-export function fetchEvent(event_id) {
+export function fetchEvent(event_id, cb) {
 
 	return (dispatch) => {
 		axios.get(`${ROOT_URL}/event/${event_id}`)
@@ -35,6 +35,8 @@ export function fetchEvent(event_id) {
 				type: FETCH_EVENT,
 				payload: event
 			});
+
+			cb();
 		})
 		.catch(err => {
 			console.log(err);

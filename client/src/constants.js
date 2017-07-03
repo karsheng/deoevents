@@ -1,5 +1,12 @@
 export const ROOT_URL = 'http://localhost:3090';
 
+export const INTERESTS = [
+  '5km',
+  '10km',
+  'Half-marathon',
+  'Full-marathon'
+];
+
 export const COUNTRIES = [
 	"Afghanistan",
   "Albania",

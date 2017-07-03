@@ -2,70 +2,16 @@ import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import * as actions from '../../actions/auth_actions';
 import { connect } from 'react-redux';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton'
-import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import DatePicker from 'material-ui/DatePicker';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-import { COUNTRIES } from '../../constants';
-import AutoComplete from 'material-ui/AutoComplete';
-
-const renderMenuItem = (itemArray) => {
-  return itemArray.map(itemValue => {
-    return <MenuItem key={itemValue} value={itemValue} primaryText={itemValue} />
-  });
-};
-
-const renderRadioGroup = ({ input, ...rest }) => (
-  <RadioButtonGroup
-    {...input}
-    {...rest}
-    valueSelected={input.value}
-    onChange={(event, value) => input.onChange(value)}
-  />
-);
-
-const renderSelectField = ({
-  input,
-  label,
-  meta: { touched, error },
-  children,
-  multiple,
-  ...custom
-}) => (
-  <SelectField
-    multiple={multiple}
-    floatingLabelText={label}
-    errorText={touched && error}
-    {...input}
-    onChange={(event, index, value) => input.onChange(value)}
-    children={children}
-    {...custom}
-  />
-);
-
-const renderDatePicker = ({ input, label, meta: { touched, error }, ...custom }) => {
-  return (
-    <DatePicker
-      onChange={(e, val) => {return input.onChange(val)}}
-      {...custom}
-      value={(input.value) ? input.value : {}}
-    />
-  );
-};
-
-const renderField = (field) => {
-  const { meta: { touched, error } } = field;
-  return(
-    <TextField hintText={field.label}
-      floatingLabelText={field.label}
-      errorText={touched && error}
-      type={field.type}
-      {...field.input}
-    />
-  );
-}
+import { RadioButton } from 'material-ui/RadioButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import { COUNTRIES, INTERESTS } from '../../constants';
+import {
+  renderMenuItem,
+  renderRadioGroup,
+  renderSelectField,
+  renderDatePicker,
+  renderField
+} from '../../helper/';
 
 class Signup extends Component {
 
@@ -175,10 +121,7 @@ class Signup extends Component {
           label="I am interested in:"
           multiple={true}
         >
-          <MenuItem value="5km" primaryText="5km" />
-          <MenuItem value="10km" primaryText="10km" />
-          <MenuItem value="Half-marathon" primaryText="Half-marathon" />
-          <MenuItem value="Full-marathon" primaryText="Full-marathon" />
+          {renderMenuItem(INTERESTS)}
         </Field>
         <br/>
         <Field 

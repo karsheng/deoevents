@@ -8,6 +8,7 @@ module.exports = {
 
 		Event.findById(event_id)
 			.populate({ path: 'categories', model: 'category' })
+			.populate({ path: 'meals', model: 'meal' })
 			.then(event => {
 				res.json(event);
 			})
