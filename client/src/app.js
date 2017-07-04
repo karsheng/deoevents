@@ -9,6 +9,7 @@ import RequireAuth from './components/auth/require_auth';
 import WelcomePage from './components/welcome';
 import EventPage from './components/event_page';
 import CategorySelection from './components/registration/category_selection';
+import MealSelection from './components/registration/meal_selection';
 import UserProfile from './components/profile';
 
 
@@ -17,8 +18,9 @@ export default class App extends Component {
 		return(
 			<div>
 				<Header />
-				<div className="inner-container">
+				<div>
 					<Switch>
+						<Route path="/registration/meal/:event_id" component={MealSelection} />
 						<Route path="/registration/category/:event_id" component={CategorySelection} />
 						<Route path="/event/:_id" component={EventPage} />
 						<Route path="/signin" component={Signin} />

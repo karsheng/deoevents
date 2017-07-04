@@ -51,11 +51,21 @@ class CategorySelection extends Component {
 
 	componentDidMount() {
     const { event_id } = this.props.match.params;
+    const { selectedCategory } = this.props;
+
 		this.props.fetchEvent(event_id, () => {
 			const { categories } = this.props.event;
+			
 			const zDepths = categories.map(category => {
+				
+				if (selectedCategory && selectedCategory._id === category._id) {
+					this.setState({ isDisabled: false });
+					return 5;
+				}
+				
 				return 1;
 			});
+			
 			this.setState({ zDepths });
 		});
 	}
@@ -99,7 +109,7 @@ class CategorySelection extends Component {
 				return 'dummyString';
 			} else {
 				return(
-					<Link to={"/"}></Link>
+					<Link to={"/registration/meal/" + event._id}></Link>
 				);
 			}
 		};
@@ -128,8 +138,9 @@ class CategorySelection extends Component {
 
 function mapStateToProps(state, ownProps) {
 	return {
-		event: state.events[ownProps.match.params.event_id]
-	}
+		event: state.events[ownProps.match.params.event_id],
+		selectedCategory: state.registration.selectedCategory
+	};
 }
 
 export default connect(mapStateToProps, { fetchEvent, selectCategory })(CategorySelection);

@@ -1,14 +1,24 @@
+import _ from 'lodash';
 import {
 	SELECT_CATEGORY,
-	SELECT_MEAL
+	SELECT_MEAL,
+	DESELECT_MEAL
 } from '../actions/types';
 
-export default function(state = {}, action) {
+export default function(state = { selectedMeals: {} }, action) {
 	switch(action.type) {
+		
 		case SELECT_CATEGORY:
-			return { ...state, selectedCategory: action.payload }
+			return { ...state, selectedCategory: action.payload };
+		
 		case SELECT_MEAL:
-			return { ...state, selectedMeal: action.payload }
+			const { meal } = action.payload;
+			const selectedMeals = { ...state.selectedMeals, [meal._id]: action.payload };
+			return { ...state, selectedMeals: selectedMeals };
+
+		case DESELECT_MEAL:
+			return { ...state, selectedMeals: _.omit(state.selectedMeals, action.payload)};
+
 	}
 
 	return state;

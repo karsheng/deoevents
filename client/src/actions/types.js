@@ -9,4 +9,4 @@ export const FETCH_EVENT = 'fetch_event';
 
 export const SELECT_CATEGORY = 'select_category';
 export const SELECT_MEAL = 'select_meal';
-export const CATEGORY_PAPER_ZDEPTH = 'category_paper_zdepth';
+export const DESELECT_MEAL = 'deselect_meal';
