@@ -31,8 +31,8 @@ class MealSelection extends Component {
 		if (!_.findKey(selectedMeals, {event: event_id})) this.props.resetMealSelection();
 	}
 
-	renderMealForm(meals) {
-		return meals.map((meal) => {
+	renderMealForm(event) {
+		return event.meals.map((meal) => {
 			return(
 				<MealCard
 					key={meal._id} 
@@ -68,7 +68,7 @@ class MealSelection extends Component {
 				<h2>{event.name}</h2>
 				<h3>Step 2: Select Meal</h3>
 				<div className="row">
-					{this.renderMealForm(event.meals)}
+					{this.renderMealForm(event)}
 				</div>
 				<br />
 				{this.renderButton(

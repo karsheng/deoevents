@@ -30,7 +30,18 @@ class MealCard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			value: 1
+			value: 1,
+			checked: false
+		}
+	}
+
+	componentDidMount() {
+		const { selectedMeals, meal } = this.props;
+		if (selectedMeals[meal._id]) {
+			this.setState({
+				value: selectedMeals[meal._id].quantity,
+				checked: true
+			});
 		}
 	}
 
@@ -45,7 +56,7 @@ class MealCard extends Component {
 
 	handleCheck = (e, isInputChecked) => {
 		const { meal, event } = this.props;
-
+		this.setState({ checked: !this.state.checked});
 		if (isInputChecked) {
 			this.props.selectMeal({ meal, quantity: this.state.value, event: event._id });
 		} else {
@@ -83,6 +94,7 @@ class MealCard extends Component {
 		        <Checkbox 
 							style={styles.checkbox}
 							onCheck={this.handleCheck}
+							checked={this.state.checked}
 						/>
 					</CardActions>
 				</Card>
