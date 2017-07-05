@@ -72,16 +72,9 @@ class MealSelection extends Component {
 				)}
 				<br />
 				{this.renderButton(
-					backButtonLink(event),
+					nextButtonLink(event),
 					'Next'
 				)}
-				<br />
-			<FlatButton 
-				primary={true}
-				onTouchTap={console.log(this.props.selectedMeals)}
-			>
-				test
-			</FlatButton>
 			</div>
 		);
 
