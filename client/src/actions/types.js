@@ -10,3 +10,4 @@ export const FETCH_EVENT = 'fetch_event';
 export const SELECT_CATEGORY = 'select_category';
 export const SELECT_MEAL = 'select_meal';
 export const DESELECT_MEAL = 'deselect_meal';
+export const RESET_MEAL_SELECTION = 'reset_meal_selection';

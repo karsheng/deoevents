@@ -34,18 +34,20 @@ class MealCard extends Component {
 		}
 	}
 
-	handleValueChange = (event, index, value) => {
-		const { meal } = this.props;
+	handleValueChange = (e, index, value) => {
+		const { meal, event } = this.props;
+
 		this.setState({value});
 		if (meal._id in this.props.selectedMeals) {
-			this.props.selectMeal({ meal, quantity: value });
+			this.props.selectMeal({ meal, quantity: value, event: event._id });
 		}
 	}
 
-	handleCheck = (event, isInputChecked) => {
-		const { meal } = this.props;
+	handleCheck = (e, isInputChecked) => {
+		const { meal, event } = this.props;
+
 		if (isInputChecked) {
-			this.props.selectMeal({ meal, quantity: this.state.value });
+			this.props.selectMeal({ meal, quantity: this.state.value, event: event._id });
 		} else {
 			this.props.deselectMeal(meal._id);
 		}

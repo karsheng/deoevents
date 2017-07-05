@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import CircularProgress from 'material-ui/CircularProgress';
 import FlatButton from 'material-ui/FlatButton';
 import MealCard from './meal_card';
+import _ from 'lodash';
+import { resetMealSelection } from '../../actions/registration_actions';
 
 class MealSelection extends Component {
 
@@ -18,13 +20,15 @@ class MealSelection extends Component {
 		);
 	}
 
-	componentDidMount() {
-		const { selectedCategory } = this.props;
+	componentWillMount() {
+		const { selectedCategory, selectedMeals } = this.props;
 		const { event_id } = this.props.match.params;
-		
+
 		if (!selectedCategory) return this.props.history.push(`/event/${event_id}`);
 		if (selectedCategory.event !== event_id) return this.props.history.push(`/event/${event_id}`);
-		
+		// if selectedMeals' event is not equal to event_id
+		// set selectedMeals to {} with resetMealSelection action
+		if (!_.findKey(selectedMeals, {event: event_id})) this.props.resetMealSelection();
 	}
 
 	renderMealForm(meals) {
@@ -33,6 +37,7 @@ class MealSelection extends Component {
 				<MealCard
 					key={meal._id} 
 					meal={meal}
+					event={event}
 				/>
 			);
 		});
@@ -90,4 +95,4 @@ function mapStateToProps(state, ownProps) {
 	};
 }
 
-export default connect(mapStateToProps)(MealSelection);
+export default connect(mapStateToProps, { resetMealSelection })(MealSelection);
