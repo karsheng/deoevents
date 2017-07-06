@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Order = require('./order');
 const Schema = mongoose.Schema;
+const OrderSchema = require('./order');
 
 const RegistrationSchema = new Schema(
 	{
@@ -16,6 +17,7 @@ const RegistrationSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'category'
 		},
+		orders: [OrderSchema],
 		paid: {
 			type: Boolean,
 			default: false
@@ -51,27 +53,21 @@ RegistrationSchema.statics.getTotalBill = function(registration_id, user, cb) {
 			user
 		})
 		.populate({ path: 'category', model: 'category' })
+		.populate({ path: 'orders.meal', model: 'meal' })
 		.exec(function(err, reg) {
 			if (err) return cb(err);
 
-			if (reg) { reg_bill = reg.category.price; }
-			
-			Order.find({
-				registration: registration_id,
-				user
-			})
-			.populate({ path: 'meal', model: 'meal' })
-			.exec(function(err, orders) {
-				if (err) return cb(err);
+			if (reg) { 
+				reg_bill = reg.category.price; 
+				reg.orders.map(order => {
+					orders_bill += order.meal.price * order.quantity
+				});
 
-				orders_bill = orders.reduce(function(total, order) {
-					return total + order.meal.price * order.quantity;
-				}, 0);
-				
 				const total_bill = reg_bill + orders_bill
-				
 				return cb(null, total_bill);
-			});
+			} else {
+				return cb(null, 0);
+			}
 		});	
 };
 

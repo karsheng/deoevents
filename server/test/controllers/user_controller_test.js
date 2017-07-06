@@ -7,12 +7,9 @@ const createUser = require('../../helper/create_user_helper');
 const createEvent = require('../../helper/create_event_helper');
 const updateEvent = require('../../helper/update_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
-const createOrder = require('../../helper/create_order_helper');
-const createRegistration = require('../../helper/create_registration_helper');
 const faker = require('faker');
 const mongoose = require('mongoose');
 const Registration = mongoose.model('registration');
-const Order = mongoose.model('order');
 
 describe('User Controller', function(done) {
 	this.timeout(15000);
@@ -90,109 +87,16 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('GET to /meal/order/:registration_id returns a meal order', done => {
-		createRegistration(userToken, event._id, cat1)
-		.then(registration => {
-			createOrder(userToken, meal1, registration, 10)
-			.then(order => {
-				request(app)
-					.get(`/meal/order/${order._id}`)
-					.set('authorization', userToken)
-					.end((err, res) => {
-						assert(res.body.meal.name === 'Food 1');
-						assert(res.body.quantity === 10);
-						assert(res.body.registration.toString() === registration._id.toString());
-						done();
-					});
-			});
-		});
-	});
-
-	it('POST to /meal/order/:registration_id creates a meal order', done => {
-		createRegistration(userToken, event._id, cat1)
-		.then(registration => {
-			request(app)
-				.post(`/meal/order/${registration._id}`)
-				.set('authorization', userToken)
-				.send({
-					meal: meal1,
-					registration,
-					quantity: 1
-				})
-				.end((err, res)=> {
-					Order.findById(res.body._id)
-						.populate({ path: 'meal', ref: 'meal' })
-						.populate({ path: 'user', ref: 'user' })
-						.then(order => {
-							assert(order.user.name === 'Gavin Belson');
-							assert(order.meal.name === 'Food 1');
-							assert(order.registration.toString() === registration._id);
-							done();	
-						});
-				});
-		});
-	});
-
-	it('PUT to /meal/order/:order_id updates a meal order', done => {
-		createRegistration(userToken, event._id, cat1)
-		.then(registration => {
-			createOrder(userToken, meal1, registration, 10)
-				.then(order => {
-					request(app)
-					.put(`/meal/order/${order._id}`)
-					.set('authorization', userToken)
-					.send({
-						quantity: 20
-					})
-					.end((err, res) => {
-						Order.findById(order._id)
-							.then(result => {
-								assert(result.quantity === 20);
-								done();
-							});
-					});
-				});
-		});
-	});
-
-	it('DELETE to /meal/order/:order_id deletes a meal order', done => {
-		createRegistration(userToken, event._id, cat1)
-		.then(registration => {
-			createOrder(userToken, meal1, registration, 10)
-				.then(order => {
-					request(app)
-					.delete(`/meal/order/${order._id}`)
-					.set('authorization', userToken)
-					.end((err, res) => {
-						Order.findById(order._id)
-							.then(result => {
-								assert(result === null);
-								done();
-							});
-					});
-				});
-		});
-	});	
-
-
-	it('GET to /event/register/:registration_id returns registration info', done => {
-		createRegistration(userToken, event._id, cat1)
-		.then(registration => {
-			request(app)
-			.get(`/event/register/${registration._id}`)
-			.set('authorization', userToken)
-			.end((err, res) => {
-				assert(res.body.event.name === 'Event 1');
-				assert(res.body.category.name === '5km');
-				assert(res.body.paid === false);
-				done();
-			});
-		});
-	});
-
-	it('POST to /event/register/:registration_id/:category_id register a user to event', done => {
+	it('POST to /event/register/:registration_id/:category_id creates a registration', done => {
 		request(app)
-			.post(`/event/register/${event._id}/${cat1._id}`)
+			.post(`/event/register/${event._id}`)
+			.send({
+				category: cat1,
+				orders: [
+					{ meal: meal1, quantity: 1 },
+					{ meal: meal2, quantity: 2 }
+				]
+			})
 			.set('authorization', userToken)
 			.end((err, res) => {
 				Registration.findById(res.body._id)
@@ -208,38 +112,4 @@ describe('User Controller', function(done) {
 				});
 			});
 	});
-
-	it('PUT to /event/register/:registration_id/:category_id updates the registration', done => {
-		createRegistration(userToken, event._id, cat1)
-		.then(reg => {
-			request(app)
-				.put(`/event/register/${reg._id}/${cat2._id}`)
-				.set('authorization', userToken)
-				.end((err, res) => {
-					Registration.findById(res.body._id)
-						.populate({ path: 'category', model: 'category' })
-						.then(reg => {
-							assert(reg.category.name === '10km');
-							done();
-						});
-				});
-		});
-	});
-
-	it('DELETE to /event/register/:registration_id removes the registration', done => {
-		createRegistration(userToken, event._id, cat1)
-			.then(reg => {
-				request(app)
-					.delete(`/event/register/${reg._id}`)
-					.set('authorization', userToken)
-					.end((err, res) => {
-
-						Registration.findById(reg._id)
-							.then(result => {
-								assert(result === null);
-								done();
-							});
-					});
-			});
-		});
 });

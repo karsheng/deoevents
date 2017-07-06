@@ -7,7 +7,6 @@ const createUser = require('../../helper/create_user_helper');
 const createEvent = require('../../helper/create_event_helper');
 const updateEvent = require('../../helper/update_event_helper');
 const createMeal = require('../../helper/create_meal_helper');
-const createOrder = require('../../helper/create_order_helper');
 const createRegistration = require('../../helper/create_registration_helper');
 const createPayPalPayment = require('../../helper/create_paypal_payment_helper');
 const faker = require('faker');
@@ -83,58 +82,52 @@ describe('PayPal Payment Controller', function(done){
 
 
 	it('POST to /paypal/create-payment/:registration_id creates payment and returns a paymentID', done => {
-		createRegistration(userToken, event._id, cat1)
+		const orders = [
+			{ meal: meal1, quantity: 1 },
+			{ meal: meal2, quantity: 1 }
+		];
+		createRegistration(userToken, event._id, cat1, orders)
 		.then(registration => {
-			Promise.all([
-				createOrder(userToken, meal1, registration, 1),
-				createOrder(userToken, meal2, registration, 1)
-			])
-			.then(orders => {
-				request(app)
-					.post(`/paypal/create-payment/${registration._id}`)
-					.set('authorization', userToken)
-					.end((err, res) => {
-						assert(res.body.paymentID === 'PAY-123ABC456DEF789');
-						done();
-					});
-			});
+			request(app)
+				.post(`/paypal/create-payment/${registration._id}`)
+				.set('authorization', userToken)
+				.end((err, res) => {
+					assert(res.body.paymentID === 'PAY-123ABC456DEF789');
+					done();
+				});
 		});
 	});
 
 	it('POST to /paypal/execute-payment/:registration_id executes and saves payment and updates registrations and orders paid attribute to true', done => {
-		createRegistration(userToken, event._id, cat1)
+		const orders = [
+			{ meal: meal1, quantity: 1 },
+			{ meal: meal2, quantity: 1 }
+		];
+
+		createRegistration(userToken, event._id, cat1, orders)
 		.then(registration => {
-			Promise.all([
-				createOrder(userToken, meal1, registration, 1),
-				createOrder(userToken, meal2, registration, 1)
-			])
-			.then(orders => {
-				createPayPalPayment(userToken, registration)
-				.then(paypalObj => {
-					request(app)
-						.post(`/paypal/execute-payment/${registration._id}`)
-						.set('authorization', userToken)
-						.send({
-							payment_id: paypalObj.paymentID, 
-							payer_id: 'payer_id'
-						})
-						.end((err, res) => {
-							Payment.findById(res.body._id)
-							.populate({ path: 'registration', model: 'registration' })
-							.populate({ path: 'orders', model: 'order' })
-							.populate({ path: 'user', model: 'user' })
-							.then(payment => {
-								assert(payment.registration.paid === true);
-								assert(payment.orders[0].paid === true);
-								assert(payment.orders[1].paid === true);
-								assert(payment.amount === 80);
-								assert(payment.currency === 'MYR');
-								assert(payment.user.registrations[0].toString() === registration._id.toString());
-								done();
-							});
+			createPayPalPayment(userToken, registration)
+			.then(paypalObj => {
+				request(app)
+					.post(`/paypal/execute-payment/${registration._id}`)
+					.set('authorization', userToken)
+					.send({
+						payment_id: paypalObj.paymentID, 
+						payer_id: 'payer_id'
+					})
+					.end((err, res) => {
+						Payment.findById(res.body._id)
+						.populate({ path: 'registration', model: 'registration' })
+						.populate({ path: 'user', model: 'user' })
+						.then(payment => {
+							assert(payment.registration.paid === true);
+							assert(payment.amount === 80);
+							assert(payment.currency === 'MYR');
+							assert(payment.user.registrations[0].toString() === registration._id.toString());
+							done();
 						});
-				}); 
-			});
+					});
+			}); 
 		});
 	});
 });

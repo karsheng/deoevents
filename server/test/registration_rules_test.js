@@ -118,8 +118,11 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user age does not fall within allowable age range', done => {
 		request(app)
-			.post(`/event/register/${event1._id}/${cat1._id}`)
+			.post(`/event/register/${event1._id}`)
 			.set('authorization', userToken1)
+			.send({
+				category: cat1
+			})
 			.end((err, res) => {
 				// user born in 1957, age limit is 21 to 48
 				// return error
@@ -130,8 +133,11 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user gender does not match category gender requirement', done => {
 		request(app)
-			.post(`/event/register/${event1._id}/${cat2._id}`)
+			.post(`/event/register/${event1._id}`)
 			.set('authorization', userToken1)
+			.send({
+				category: cat2
+			})
 			.end((err, res) => {
 				// user is male, cat2 is for female
 				// return error
@@ -140,25 +146,15 @@ describe('Registration Rules', function(done) {
 			});
 	});
 
-	it('Returns error if user tries to change to a category which they are not eligible for', done => {
-		createRegistration(userToken1, event1._id, cat3)
-		.then(reg => {
-			request(app)
-				.put(`/event/register/${reg._id}/${cat2._id}`)
-				.set('authorization', userToken1)
-				.end((err, res) => {
-					assert(res.body.message === 'You cannot register for this category');
-					done();
-				});
-		});
-	});
-
 	it('Returns error if user tries to register to the same event more than once', done => {
 		createRegistration(userToken1, event1._id, cat3)
 		.then(reg => {
 			request(app)
-				.post(`/event/register/${event1._id}/${cat3._id}`)
+				.post(`/event/register/${event1._id}`)
 				.set('authorization', userToken1)
+				.send({
+					category: cat3
+				})
 				.end((err, res) => {
 					assert(res.body.message === 'User already registered');
 					done();
@@ -174,8 +170,11 @@ describe('Registration Rules', function(done) {
 				executePayPalPayment(userToken1, registration, paypalObj.paymentID, 'payer_id')
 				.then(payment => {
 					request(app)
-						.post(`/event/register/${event1._id}/${cat4._id}`)
+						.post(`/event/register/${event1._id}`)
 						.set('authorization', userToken2)
+						.send({
+							category: cat4
+						})
 						.end((err, res) => {
 							assert(res.body.message === 'Registration for this category is closed');
 							done();
@@ -187,8 +186,9 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user tries to register for an event that is already closed', done => {
 		request(app)
-			.post(`/event/register/${event2._id}/${cat5._id}`)
+			.post(`/event/register/${event2._id}`)
 			.set('authorization', userToken2)
+			.send({ category: cat5 })
 			.end((err, res) => {
 				assert(res.body.message === 'Registration for this category is closed');
 				done();

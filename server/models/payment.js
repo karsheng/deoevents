@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Registration = require('./registration');
-const Order = require('./order');
 const User = require('./user');
 
 const PaymentSchema = new Schema(
@@ -14,10 +13,6 @@ const PaymentSchema = new Schema(
 			type: Schema.Types.ObjectId,
 			ref: 'registration'
 		},
-		orders: [{
-			type: Schema.Types.ObjectId,
-			ref: 'order'
-		}],
 		amount: Number,
 		currency: String,
 		paypalPaymentId: String
@@ -35,32 +30,16 @@ PaymentSchema.pre('save', function(next) {
 		)
 		.exec(function(err, registration) {
 			if (err) { return next(err); }
-
-			Order.update(
-				{ registration: payment.registration },
-				{ $set: { paid: true } },
-				{ multi: true , new: true }
-			)
-			.exec(function(err) {
+			User
+			.findById(payment.user)
+			.exec(function(err, user) {
 				if (err) { return next(err); }
-				Order
-					.find({ registration: payment.registration })
-					.exec(function(err, orders) {
-						if (err) { return next(err); }
-						payment.orders = orders;
-
-						User
-							.findById(payment.user)
-							.exec(function(err, user) {
-								if (err) { return next(err); }
-								user.registrations.push(payment.registration);
-								user.save()
-									.then(_ => {
-										next();
-									})
-									.catch(next)
-							});
-					});
+				user.registrations.push(payment.registration);
+				user.save()
+					.then(_ => {
+						next();
+					})
+					.catch(next)
 			});
 		});
 });

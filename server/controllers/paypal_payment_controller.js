@@ -1,6 +1,5 @@
 const Registration = require('../models/registration');
 const Payment = require('../models/payment');
-const Order = require('../models/order');
 
 // simulate PayPal RESTful API response for creating payment
 var paypal = {};
