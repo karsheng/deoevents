@@ -12,7 +12,7 @@ const createPayPalPayment = require('../../helper/create_paypal_payment_helper')
 const faker = require('faker');
 const Payment = require('../../models/payment');
 
-describe('PayPal Payment Controller', function(done){
+xdescribe('PayPal Payment Controller', function(done){
 	this.timeout(20000);
 	var adminToken, userToken;
 	var cat1;

@@ -169,7 +169,7 @@ describe('Registration Rules', function(done) {
 		});		
 	});
 
-	it('Returns error if user tries to register for an event and the participantLimit is met', done => {
+	xit('Returns error if user tries to register for an event and the participantLimit is met', done => {
 		createRegistration(userToken1, event1._id, cat4)
 		.then(registration => {
 			createPayPalPayment(userToken1, registration)

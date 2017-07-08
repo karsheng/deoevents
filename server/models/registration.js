@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
-const Order = require('./order');
 const Schema = mongoose.Schema;
 const OrderSchema = require('./order');
+const Category = require('./category');
+const Meal = require('./meal');
 
 const RegistrationSchema = new Schema(
 	{
@@ -18,6 +19,7 @@ const RegistrationSchema = new Schema(
 			ref: 'category'
 		},
 		orders: [OrderSchema],
+		totalBill: Number,
 		paid: {
 			type: Boolean,
 			default: false
@@ -43,33 +45,27 @@ RegistrationSchema.statics.checkStatus = function(user, category, cb) {
 		});
 };
 
-RegistrationSchema.statics.getTotalBill = function(registration_id, user, cb) {
+RegistrationSchema.pre('save', function(next) {
 	var	reg_bill = 0,
 			orders_bill = 0
 
-	this.
-		findOne({
-			_id: registration_id,
-			user
-		})
-		.populate({ path: 'category', model: 'category' })
-		.populate({ path: 'orders.meal', model: 'meal' })
-		.exec(function(err, reg) {
-			if (err) return cb(err);
-
-			if (reg) { 
-				reg_bill = reg.category.price; 
-				reg.orders.map(order => {
-					orders_bill += order.meal.price * order.quantity
+	const registration = this;
+	Category.populate(this, { path: 'category' }, function(err, reg) {
+		reg_bill += reg.category.price;
+		if (registration.orders) {
+			Meal.populate(reg, { path: 'orders.meal' }, function(err, reg) {
+			reg.orders.map(order => {
+					orders_bill += order.meal.price * order.quantity;
 				});
-
-				const total_bill = reg_bill + orders_bill
-				return cb(null, total_bill);
-			} else {
-				return cb(null, 0);
-			}
-		});	
-};
+				registration.totalBill = reg_bill + orders_bill;
+				next();
+			});
+		} else {
+			registration.totalBill = reg_bill;
+			next();
+		}
+	});
+});
 
 const Registration = mongoose.model('registration', RegistrationSchema);
 

@@ -2,6 +2,7 @@ const assert = require('assert');
 const request = require('supertest');
 const app = require('../../app');
 const createAdmin = require('../../helper/create_admin_helper');
+const createRegistration = require('../../helper/create_registration_helper');
 const createCategory = require('../../helper/create_category_helper');
 const createUser = require('../../helper/create_user_helper');
 const createEvent = require('../../helper/create_event_helper');
@@ -87,7 +88,26 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('POST to /event/register/:registration_id/:category_id creates a registration', done => {
+	it('GET to /registration/:event_id retrieves registration info', done => {
+		const orders = [
+			{ meal: meal1, quantity: 1 },
+			{ meal: meal2, quantity: 2 }
+		];
+		createRegistration(userToken, event._id, cat1, orders)
+		.then(reg => {
+			request(app)
+				.get(`/registration/${event._id}`)
+				.set('authorization', userToken)
+				.end((err, res) => {
+					assert(res.body.event.name === 'Event 1');
+					assert(res.body.orders.length === 2);
+					assert(res.body.totalBill === 105);
+					done();
+				});
+		});
+	});
+
+	it('POST to /event/register/:event_id creates a registration', done => {
 		request(app)
 			.post(`/event/register/${event._id}`)
 			.send({
@@ -104,6 +124,7 @@ describe('User Controller', function(done) {
 				.populate({ path: 'event', model: 'event' })
 				.populate({ path: 'category', model: 'category' })
 				.then(reg => {
+					assert(reg.totalBill === 105);
 					assert(reg.event.name === 'Event 1');
 					assert(reg.user.name === 'Gavin Belson');
 					assert(reg.category.name === '5km');
