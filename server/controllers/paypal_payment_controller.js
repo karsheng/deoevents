@@ -1,8 +1,13 @@
 const Registration = require('../models/registration');
 const Payment = require('../models/payment');
+const paypal = require('paypal-rest-sdk');
+const config = require('../config');
 
-// simulate PayPal RESTful API response for creating payment
-var paypal = {};
+paypal.configure({
+	mode: 'sandbox',
+	client_id: config.paypal_client_id,
+	client_secret: config.paypal_client_secret
+});
 
 paypal.createPayment = (total_bill, cb) => {
 	return cb({

@@ -12,12 +12,13 @@ const createPayPalPayment = require('../helper/create_paypal_payment_helper');
 const executePayPalPayment = require('../helper/execute_paypal_payment_helper');
 const mongoose = require('mongoose');
 const User = mongoose.model('user');
+const Registration = mongoose.model('registration');
 
 describe('Registration Rules', function(done) {
 	this.timeout(20000);
 	var event1, event2;
 	var adminToken, userToken1, userToken2;
-	var cat1, cat2, cat3, cat4;
+	var cat1, cat2, cat3, cat4, cat6;
 	var cat5;
 
 	beforeEach(done => {
@@ -35,6 +36,7 @@ describe('Registration Rules', function(done) {
 					createCategory(adminToken, '10km Male 48 and above ', 50, true, 48, 999, 1000, events[0]),
 					createCategory(adminToken, '10km Male 18 and above exclusive', 50, true, 18, 999, 1, events[0]),
 					createCategory(adminToken, '10km Male 21 and above (closed) ', 50, true, 21, 999, 1000, events[1]),
+					createCategory(adminToken, '10km Male 21 and above (open)', 50, true, 21, 999, 1000, events[0]),
 				])
 				.then(cats => {
 					cat1 = cats[0];
@@ -42,6 +44,7 @@ describe('Registration Rules', function(done) {
 					cat3 = cats[2];
 					cat4 = cats[3];
 					cat5 = cats[4];
+					cat6 = cats[5];
 					Promise.all([
 						updateEvent(
 							adminToken,
@@ -53,7 +56,7 @@ describe('Registration Rules', function(done) {
 							101.123,
 							faker.lorem.paragraphs(),
 							faker.image.imageUrl(),
-							[cat1, cat2, cat3, cat4],
+							[cat1, cat2, cat3, cat4, cat6],
 							[],
 							true
 						),
@@ -146,18 +149,22 @@ describe('Registration Rules', function(done) {
 			});
 	});
 
-	it('Returns error if user tries to register to the same event more than once', done => {
+	it('Updates registration if user tries to register to the same event more than once', done => {
 		createRegistration(userToken1, event1._id, cat3)
 		.then(reg => {
 			request(app)
 				.post(`/event/register/${event1._id}`)
 				.set('authorization', userToken1)
 				.send({
-					category: cat3
+					category: cat6
 				})
 				.end((err, res) => {
-					assert(res.body.message === 'User already registered');
-					done();
+					Registration.findById(reg._id)
+					.populate({ path: 'category', model: 'category'})
+					.then(result => {
+						assert(result.category.name === '10km Male 21 and above (open)');
+						done();
+					});
 				});
 		});		
 	});
