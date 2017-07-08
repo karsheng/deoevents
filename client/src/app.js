@@ -10,7 +10,8 @@ import WelcomePage from './components/welcome';
 import EventPage from './components/event_page';
 import CategorySelection from './components/registration/category_selection';
 import MealSelection from './components/registration/meal_selection';
-import ConfirmationPage from './components/registration/confirmation_page';
+import Checkout from './components/registration/checkout';
+import Payment from './components/registration/payment';
 import UserProfile from './components/profile';
 
 
@@ -21,7 +22,8 @@ export default class App extends Component {
 				<Header />
 				<div>
 					<Switch>
-						<Route path="/registration/confirmation/:event_id" component={ConfirmationPage} />
+						<Route path="/registration/payment/:event_id" component={Payment} />
+						<Route path="/registration/checkout/:event_id" component={Checkout} />
 						<Route path="/registration/category/:event_id" component={CategorySelection} />
 						<Route path="/registration/meal/:event_id" component={MealSelection} />
 						<Route path="/event/:_id" component={EventPage} />

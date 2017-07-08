@@ -3,10 +3,12 @@ import {
 	SELECT_CATEGORY,
 	SELECT_MEAL,
 	DESELECT_MEAL,
-	RESET_MEAL_SELECTION
+	RESET_MEAL_SELECTION,
+	SET_TOTAL_PRICE,
+	FETCH_REGISTRATION_INFO
 } from '../actions/types';
 
-export default function(state = { selectedMeals: {} }, action) {
+export default function(state = { selectedMeals: {}, totalPrice: 0, info: {} }, action) {
 	switch(action.type) {
 		
 		case SELECT_CATEGORY:
@@ -23,6 +25,12 @@ export default function(state = { selectedMeals: {} }, action) {
 		case RESET_MEAL_SELECTION:
 			return { ...state, selectedMeals: {} };
 
+		case SET_TOTAL_PRICE:
+			return { ...state, totalPrice: action.payload}
+
+		case FETCH_REGISTRATION_INFO:
+			return { ...state, info: action.payload }
+			
 	}
 
 	return state;

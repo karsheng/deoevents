@@ -59,7 +59,7 @@ class MealSelection extends Component {
 		
 		const nextButtonLink = (event) => {
 			return(
-				<Link to={"/registration/confirmation/" + event._id}></Link>
+				<Link to={"/registration/checkout/" + event._id}></Link>
 			);
 		};
 

@@ -1,21 +1,56 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { setTotalPrice, createRegistration } from '../../actions/registration_actions';
 import _ from 'lodash';
+import FlatButton from 'material-ui/FlatButton';
+import { Link } from 'react-router-dom';
 
-class ConfirmationPage extends Component {
+class Checkout extends Component {
+	handleCheckout() {
+		const { 
+			event, 
+			selectedCategory, 
+			selectedMeals
+		} = this.props;
+		
+		const orders = _.values(selectedMeals);
+		
+		this.props.createRegistration(
+			{ event, 
+				category: selectedCategory,
+				orders
+			},
+			(registration) => {
+				this.props.history.push(`/registration/payment/${event._id}`);
+			});
+	}
+
+	renderButton(component, buttonText) {
+		return(
+			<FlatButton 
+				primary={true} 
+				containerElement={component}
+			>
+				{buttonText}
+			</FlatButton>
+		);
+	}
+
 	renderTotalPrice() {
 		const {
 			selectedMeals,
 			selectedCategory
 		} = this.props;
 
-		let total = selectedCategory.price;
+		let totalPrice = selectedCategory.price;
 
 		_.map(selectedMeals, selectedMeal => {
-			total += selectedMeal.meal.price * selectedMeal.quantity;
+			totalPrice += selectedMeal.meal.price * selectedMeal.quantity;
 		});
 
-		return total;
+		this.props.setTotalPrice(totalPrice);
+
+		return totalPrice;
 	}
 
 	renderMealNameAndPrice(selectedMeals) {
@@ -39,6 +74,12 @@ class ConfirmationPage extends Component {
 			selectedCategory,
 			selectedMeals
 		} = this.props;
+
+		const backButtonLink = (event) => {
+			return(
+				<Link to={"/registration/meal/" + event._id}></Link>
+			);
+		};
 
 		return(
 			<div>
@@ -70,6 +111,17 @@ class ConfirmationPage extends Component {
 						{this.renderTotalPrice()}
 					</div>
 				</div>
+				{this.renderButton(
+					backButtonLink(event),
+					'Back'
+				)}
+				<br />
+				<FlatButton
+					primary={true}
+					onTouchTap={this.handleCheckout.bind(this)}
+				>
+					Proceed to Payment
+				</FlatButton>
 			</div>
 		);
 	}
@@ -83,4 +135,4 @@ function mapStateToProps(state, ownProps) {
 	}
 }
 
-export default connect(mapStateToProps)(ConfirmationPage);
+export default connect(mapStateToProps, { setTotalPrice, createRegistration })(Checkout);
