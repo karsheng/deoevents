@@ -25,7 +25,8 @@ class Payment extends Component {
 				<h2>Payment</h2>
 				<h3>{event.name}</h3>
 				Total: {totalBill}
-				<PayPalButton 
+				<PayPalButton
+					regId={this.props.info._id} 
 				/>
 			</div>
 		);
