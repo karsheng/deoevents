@@ -153,4 +153,47 @@ describe('Public Controller', function(done) {
 				});
 		});
 	});
+
+	it('GET to /associate/all returns all associate', done => {
+		Promise.all([
+			createAssociate(
+				adminToken,
+				'Adidas',
+				faker.image.sports(),
+				faker.image.imageUrl(),
+				'Adidas Street 1',
+				'Adidas City',
+				'Adidas County',
+				'Berlin',
+				13586,
+				'Germany',
+				'Key sponsor'
+			),
+			createAssociate(
+				adminToken,
+				'Nike',
+				faker.image.sports(),
+				faker.image.imageUrl(),
+				'Nike Street 1',
+				'Nike City',
+				'Nike County',
+				'New York',
+				13586,
+				'U.S.',
+				'Key sponsor 2'
+			)
+		])
+		.then(associates => {
+			request(app)
+				.get('/associate/all')
+				.end((err, res) => {
+					assert(res.body.length === 2);
+					assert(res.body[0].name === 'Adidas');
+					assert(res.body[1].name === 'Nike');
+					done();
+				});
+		});
+	});
 });
+
+

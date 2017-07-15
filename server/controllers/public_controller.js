@@ -27,5 +27,11 @@ module.exports = {
 		Associate.findById(associate_id)
 			.then(asso => res.json(asso))
 			.catch(next);
+	},
+	getAllAssociates(req, res, next) {
+		Associate.find({})
+			.sort({ _id: 1 })
+			.then(associates => res.json(associates))
+			.catch(next);
 	}
 }
