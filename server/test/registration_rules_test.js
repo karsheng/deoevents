@@ -31,12 +31,12 @@ describe('Registration Rules', function(done) {
 			])
 			.then(events => {
 				Promise.all([
-					createCategory(adminToken, '5km Male 21 to 48', 50, true, 21, 48, 1000, events[0]),
-					createCategory(adminToken, '5km Female 48 and above ', 50, false, 48, 999, 1000, events[0]),
-					createCategory(adminToken, '10km Male 48 and above ', 50, true, 48, 999, 1000, events[0]),
-					createCategory(adminToken, '10km Male 18 and above exclusive', 50, true, 18, 999, 1, events[0]),
-					createCategory(adminToken, '10km Male 21 and above (closed) ', 50, true, 21, 999, 1000, events[1]),
-					createCategory(adminToken, '10km Male 21 and above (open)', 50, true, 21, 999, 1000, events[0]),
+					createCategory(adminToken, '5km Male 21 to 48', 50, true, 21, 48, 1000, events[0], 'RM 100'),
+					createCategory(adminToken, '5km Female 48 and above ', 50, false, 48, 999, 1000, events[0], 'RM 100'),
+					createCategory(adminToken, '10km Male 48 and above ', 50, true, 48, 999, 1000, events[0], 'RM 100'),
+					createCategory(adminToken, '10km Male 18 and above exclusive', 50, true, 18, 999, 1, events[0], 'RM 100'),
+					createCategory(adminToken, '10km Male 21 and above (closed) ', 50, true, 21, 999, 1000, events[1], 'RM 100'),
+					createCategory(adminToken, '10km Male 21 and above (open)', 50, true, 21, 999, 1000, events[0], 'RM 100'),
 				])
 				.then(cats => {
 					cat1 = cats[0];
@@ -58,7 +58,13 @@ describe('Registration Rules', function(done) {
 							faker.image.imageUrl(),
 							[cat1, cat2, cat3, cat4, cat6],
 							[],
-							true
+							true,
+							{
+								address: '1 Newell Road',
+								time: '11th Nov 2017, 12th Nov 2017',
+								description: 'collection description'
+							},
+							'http:result.com/result'
 						),
 						updateEvent(
 							adminToken,
@@ -72,7 +78,13 @@ describe('Registration Rules', function(done) {
 							faker.image.imageUrl(),
 							[cat5],
 							[],
-							false
+							false,
+							{
+								address: '1 Newell Road',
+								time: '11th Nov 2017, 12th Nov 2017',
+								description: 'collection description'
+							},
+							'http:result.com/result'
 						)
 					])
 					.then(updatedEvents => {

@@ -37,10 +37,10 @@ describe('User Controller', function(done) {
 				createEvent(adminToken, 'Event 1')
 				.then(e => {
 					Promise.all([
-						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, e),
-						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, e),
-						createCategory(adminToken, 'half-marathon', 70, true, 21, 48, 1000, e),
-						createCategory(adminToken, 'full-marathon', 80, true, 21, 48, 1000, e),
+						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, e, 'RM 100'),
+						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, e, 'RM 100'),
+						createCategory(adminToken, 'half-marathon', 70, true, 21, 48, 1000, e, 'RM 100'),
+						createCategory(adminToken, 'full-marathon', 80, true, 21, 48, 1000, e, 'RM 100'),
 					])
 					.then(cats => {
 						cat1 = cats[0];
@@ -59,7 +59,13 @@ describe('User Controller', function(done) {
 							faker.image.imageUrl(),
 							[cat1, cat2, cat3, cat4],
 							[meal1, meal2, meal3],
-							true
+							true,
+							{
+								address: '1 Newell Road',
+								time: '11th Nov 2017, 12th Nov 2017',
+								description: 'collection description'
+							},
+							'http:result.com/result'
 						)
 						.then(updatedEvent => {
 							event = updatedEvent;

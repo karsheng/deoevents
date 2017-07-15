@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const CollectionSchema = require('./collection');
 
 const EventSchema = new Schema({
 	name: String,
@@ -19,7 +20,9 @@ const EventSchema = new Schema({
 	}],
 	open: {
 		type: Boolean
-	}
+	},
+	collectionInfo: [CollectionSchema],
+	resultUrl: String
 });
 
 const Event = mongoose.model('event', EventSchema);

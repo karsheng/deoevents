@@ -81,10 +81,8 @@ module.exports = {
 
 		paypal.payment.execute(paymentID, execute_payment_json, function(err, paypalResponse) {
 			if (err) {
-				console.log(err);
 				next(err);
 			} else {
-				console.log(paypalResponse);
 				if (paypalResponse.state === 'approved') {
 					const payment = new Payment({
 						user: req.user._id,

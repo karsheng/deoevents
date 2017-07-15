@@ -11,7 +11,8 @@ const CategorySchema = new Schema({
 	event: { 
 		type: Schema.Types.ObjectId,
 		ref: 'event'
-	}
+	},
+	prize: String
 });
 
 CategorySchema.methods.checkEligibility = function(user, cb) {

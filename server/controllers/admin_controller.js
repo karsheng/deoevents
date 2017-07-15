@@ -12,7 +12,8 @@ module.exports = {
 			ageMin,
 			ageMax,
 			participantLimit,
-			event
+			event,
+			prize
 		} = req.body;
 
 		const category = new Category({
@@ -22,7 +23,8 @@ module.exports = {
 			ageMin,
 			ageMax,
 			participantLimit,
-			event
+			event,
+			prize
 		});
 
 		category.save()
@@ -62,7 +64,9 @@ module.exports = {
 			imageUrl,
 			categories,
 			meals,
-			open
+			open,
+			collectionInfo,
+			resultUrl
 		} = req.body;
 
 		Event.findByIdAndUpdate(event_id, 
@@ -76,7 +80,9 @@ module.exports = {
 				imageUrl,
 				categories,
 				meals,
-				open
+				open,
+				collectionInfo,
+				resultUrl
 			},
 			{
 				new: true

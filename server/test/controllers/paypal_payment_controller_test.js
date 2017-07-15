@@ -34,7 +34,7 @@ xdescribe('PayPal Payment Controller', function(done){
 				createEvent(adminToken, 'Event 1')
 				.then(e => {
 					Promise.all([
-						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, e)
+						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, e, 'RM 100')
 					])
 					.then(cats => {
 						cat1 = cats[0];
@@ -50,7 +50,13 @@ xdescribe('PayPal Payment Controller', function(done){
 							faker.image.imageUrl(),
 							[cat1],
 							[meal1, meal2],
-							true
+							true,
+							{
+								address: '1 Newell Road',
+								time: '11th Nov 2017, 12th Nov 2017',
+								description: 'collection description'
+							},
+							'http:result.com/result'
 						)
 						.then(updatedEvent => {
 							event = updatedEvent;

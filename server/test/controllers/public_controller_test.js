@@ -35,12 +35,12 @@ describe('Public Controller', function(done) {
 				])
 				.then(events => {
 					Promise.all([
-						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, events[0]),
-						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, events[0]),
-						createCategory(adminToken, 'half-marathon', 70, true, 21, 48, 1000, events[0]),
-						createCategory(adminToken, 'full-marathon', 80, true, 21, 48, 1000, events[0]),
-						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, events[1]),
-						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, events[1]),
+						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, events[0], 'RM 100'),
+						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, events[0], 'RM 100'),
+						createCategory(adminToken, 'half-marathon', 70, true, 21, 48, 1000, events[0], 'RM 100'),
+						createCategory(adminToken, 'full-marathon', 80, true, 21, 48, 1000, events[0], 'RM 100'),
+						createCategory(adminToken, '5km', 50, true, 21, 48, 1000, events[1], 'RM 100'),
+						createCategory(adminToken, '10km', 60, true, 21, 48, 1000, events[1], 'RM 100')
 					])
 					.then(cats => {
 						cat1 = cats[0];
@@ -62,7 +62,13 @@ describe('Public Controller', function(done) {
 								faker.image.imageUrl(),
 								[cat1, cat2, cat3, cat4],
 								[meal1, meal2, meal3],
-								false
+								false,
+								{
+									address: '1 Newell Road',
+									time: '11th Nov 2017, 12th Nov 2017',
+									description: 'collection description'
+								},
+								'http:result.com/result'
 							),
 							updateEvent(
 								adminToken,
@@ -76,7 +82,13 @@ describe('Public Controller', function(done) {
 								faker.image.imageUrl(),
 								[cat5, cat6],
 								[meal1],
-								true
+								true,
+								{
+									address: '1 Newell Road',
+									time: '11th Nov 2017, 12th Nov 2017',
+									description: 'collection description'
+								},
+								'http:result.com/result'
 							)
 						])
 						.then(updatedEvents => {
@@ -98,6 +110,8 @@ describe('Public Controller', function(done) {
 				assert(res.body.meals[0].name === 'Food 1');
 				assert(res.body.categories[0].name === '5km');
 				assert(res.body.lat === 3.1862);
+				assert(res.body.collectionInfo[0].address === '1 Newell Road');
+				assert(res.body.resultUrl === 'http:result.com/result');
 				done();
 			});
 	});
