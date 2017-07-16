@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "6.10.3"
+  },
   "scripts": {
     "test": "NODE_ENV=test nodemon --exec mocha --recursive -R min",
     "dev": "nodemon index.js"
