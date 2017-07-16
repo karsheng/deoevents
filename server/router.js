@@ -7,6 +7,8 @@ const PayPalPaymentController = require('./controllers/paypal_payment_controller
 const passportService = require('./services/passport');
 const passport = require('passport');
 
+// To be deleted after integration of payment system
+const FakePaymentController = require('./controllers/fake_payment_controller');
 
 const requireAuth = passport.authenticate('user-jwt', { session: false });
 const requireSignin = passport.authenticate('user-local', { session: false });
@@ -31,6 +33,10 @@ module.exports = function(app) {
 	app.get('/registration/:event_id', requireAuth, UserController.getRegistrationInfo);
 	app.post('/event/register/:event_id', requireAuth, UserController.registerForEvent);
 	
+	// fake payment execution
+	// to be deleted when payment system is integrated
+	app.post('/fakepayment/:registration_id', requireAuth, FakePaymentController.executeFakePayment);
+
 	app.post('/paypal/create-payment/:registration_id', requireAuth, PayPalPaymentController.createPayment);
 	app.post('/paypal/execute-payment/:registration_id', requireAuth, PayPalPaymentController.executePayment);
 
