@@ -62,6 +62,7 @@ module.exports = {
 							.catch(next);
 					} else {
 						// if user registered, update existing registration
+						if (existingReg.paid) return res.status(422).send({ message: 'User already registered' });
 						existingReg.category = category;
 						existingReg.orders = orders;
 
