@@ -3,6 +3,9 @@ import { fetchRegistrationInfo } from '../../actions/registration_actions';
 import { connect } from 'react-redux';
 import PayPalButton from './paypal_button';
 
+// To be deleted after integration of payment system
+import FakePaymentButton from './fake_payment_button';
+
 
 class Payment extends Component {
 	componentWillMount() {
@@ -27,6 +30,9 @@ class Payment extends Component {
 				Total: {totalBill}
 				<PayPalButton
 					regId={this.props.info._id} 
+				/>
+				<FakePaymentButton
+					regId={this.props.info._id}
 				/>
 			</div>
 		);
