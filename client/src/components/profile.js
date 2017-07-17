@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { fetchUserInfo } from '../actions/auth_actions';
 import _ from 'lodash';
 import Paper from 'material-ui/Paper';
 import Chip from 'material-ui/Chip';
@@ -28,6 +29,10 @@ const tabStyles = {
 };
 
 class UserProfile extends Component {
+	componentDidMount() {
+		this.props.fetchUserInfo();
+	}
+
 	renderUserInterests(interests) {
 		return interests.map((interest) => {
 			return(
@@ -124,4 +129,4 @@ function mapStateToProps(state) {
 	};
 }
 
-export default connect(mapStateToProps)(UserProfile);
+export default connect(mapStateToProps, { fetchUserInfo })(UserProfile);

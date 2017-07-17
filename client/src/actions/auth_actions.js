@@ -94,5 +94,29 @@ export function signoutUser() {
 	return { type: UNAUTH_USER };
 }
 
+export function fetchUserInfo() {
+	const token = localStorage.getItem('deotoken');
+	if (token) {
+		return function(dispatch) {
+			axios.get(
+				`${ROOT_URL}/profile`,
+				{
+					headers:
+					{
+						authorization: token
+					}
+				}
+			)
+			.then(response => {
+				dispatch({
+					type: FETCH_USER_INFO,
+					payload:response.data
+				});
+
+			});
+		}
+	}
+}
+
 
 
