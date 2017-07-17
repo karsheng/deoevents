@@ -19,7 +19,7 @@ class FakePaymentButton extends Component {
 			config
 		)
 		.then(response => {
-			console.log(response);
+			this.props.history.push(`/registration/confirmation/${regId}`);
 		})
 		.catch(err => {
 			console.log(err);

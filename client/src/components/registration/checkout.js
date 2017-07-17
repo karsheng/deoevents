@@ -21,7 +21,7 @@ class Checkout extends Component {
 				orders
 			},
 			(registration) => {
-				this.props.history.push(`/registration/payment/${event._id}`);
+				this.props.history.push(`/registration/payment/${registration._id}`);
 			});
 	}
 

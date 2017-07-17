@@ -9,8 +9,8 @@ import FakePaymentButton from './fake_payment_button';
 
 class Payment extends Component {
 	componentWillMount() {
-		const { event_id } = this.props.match.params;
-		this.props.fetchRegistrationInfo(event_id);
+		const { registration_id } = this.props.match.params;
+		this.props.fetchRegistrationInfo(registration_id, _ => {});
 	}
 
 	render() {
@@ -33,6 +33,7 @@ class Payment extends Component {
 				/>
 				<FakePaymentButton
 					regId={this.props.info._id}
+					history={this.props.history}
 				/>
 			</div>
 		);

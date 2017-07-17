@@ -9,6 +9,7 @@ import RequireAuth from './components/auth/require_auth';
 import WelcomePage from './components/welcome';
 import EventPage from './components/event_page';
 import CategorySelection from './components/registration/category_selection';
+import ConfirmationPage from './components/registration/confirmation';
 import MealSelection from './components/registration/meal_selection';
 import Checkout from './components/registration/checkout';
 import Payment from './components/registration/payment';
@@ -22,7 +23,8 @@ export default class App extends Component {
 				<Header />
 				<div>
 					<Switch>
-						<Route path="/registration/payment/:event_id" component={Payment} />
+						<Route path="/registration/confirmation/:registration_id" component={ConfirmationPage} />
+						<Route path="/registration/payment/:registration_id" component={Payment} />
 						<Route path="/registration/checkout/:event_id" component={Checkout} />
 						<Route path="/registration/category/:event_id" component={CategorySelection} />
 						<Route path="/registration/meal/:event_id" component={MealSelection} />

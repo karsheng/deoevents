@@ -77,7 +77,7 @@ export function createRegistration({ event, category, orders }, cb) {
 	};
 }
 
-export function fetchRegistrationInfo(event_id) {
+export function fetchRegistrationInfo(registration_id, cb) {
 	const token = localStorage.getItem('deotoken');
 
 	let config = {
@@ -85,14 +85,15 @@ export function fetchRegistrationInfo(event_id) {
   };
 	return function(dispatch) {
 		axios.get(
-			`${ROOT_URL}/registration/${event_id}`,
+			`${ROOT_URL}/registration/${registration_id}`,
 			config
 		)
 		.then(response => {
 			dispatch({
 				type: FETCH_REGISTRATION_INFO,
 				payload: response.data
-			})
+			});
+			cb(response.data);
 		})
 		.catch(err => {
 			console.log(err);

@@ -113,6 +113,9 @@ export function fetchUserInfo() {
 					payload:response.data
 				});
 
+			})
+			.catch(err => {
+				console.log(err);
 			});
 		}
 	}
