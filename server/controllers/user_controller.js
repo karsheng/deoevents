@@ -22,11 +22,11 @@ function checkRegistrationEligibity(user, category, next, cb) {
 
 module.exports = {
 	getRegistrationInfo(req, res, next) {
-		const { event_id } = req.params;
+		const { registration_id } = req.params;
 		const { user } = req;
 
 		Registration
-		.findOne({ event: event_id, user })
+		.findOne({ _id: registration_id, user })
 		.populate({ path: 'category', model: 'category' })
 		.populate({ path: 'orders.meal', model: 'meal' })
 		.populate({ path: 'event', model: 'event' })

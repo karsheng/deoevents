@@ -30,7 +30,7 @@ module.exports = function(app) {
 	app.get('/profile', requireAuth, UserAuthController.getProfile);
 	app.put('/profile', requireAuth, UserAuthController.updateProfile);
 
-	app.get('/registration/:event_id', requireAuth, UserController.getRegistrationInfo);
+	app.get('/registration/:registration_id', requireAuth, UserController.getRegistrationInfo);
 	app.post('/event/register/:event_id', requireAuth, UserController.registerForEvent);
 	
 	// fake payment execution

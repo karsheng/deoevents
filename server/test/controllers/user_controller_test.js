@@ -102,7 +102,7 @@ describe('User Controller', function(done) {
 		createRegistration(userToken, event._id, cat1, orders)
 		.then(reg => {
 			request(app)
-				.get(`/registration/${event._id}`)
+				.get(`/registration/${reg._id}`)
 				.set('authorization', userToken)
 				.end((err, res) => {
 					assert(res.body.event.name === 'Event 1');
