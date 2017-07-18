@@ -79,9 +79,9 @@ describe('Admin Controller', function(done) {
 	});
 
 
-	it('POST to /admin/category creates a new category', done => {
+	it('POST to /api/admin/category creates a new category', done => {
 		request(app)
-			.post('/admin/category')
+			.post('/api/admin/category')
 			.set('admin-authorization', adminToken)
 			.send({
 				name: '5km Women',
@@ -106,9 +106,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('DELETE to /admin/category/category_id deletes a category', done => {
+	it('DELETE to /api/admin/category/category_id deletes a category', done => {
 		request(app)
-			.delete(`/admin/category/${cat1._id}`)
+			.delete(`/api/admin/category/${cat1._id}`)
 			.set('admin-authorization', adminToken)
 			.end((err, res) => {
 				Category.findOne({ name: '5km'})
@@ -119,9 +119,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('POST to /admin/event creates a new event', done => {
+	it('POST to /api/admin/event creates a new event', done => {
 		request(app)
-			.post('/admin/event')
+			.post('/api/admin/event')
 			.set('admin-authorization', adminToken)
 			.send({
 				name: 'Event 1'
@@ -135,9 +135,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('PUT to /admin/event/:event_id updates the event', done => {
+	it('PUT to /api/admin/event/:event_id updates the event', done => {
 		request(app)
-			.put(`/admin/event/${event._id}`)
+			.put(`/api/admin/event/${event._id}`)
 			.set('admin-authorization', adminToken)
 			.send({
 				name: 'Changed Event Name',
@@ -174,9 +174,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('DELETE to /admin/event/:event_id removes the event', done => {
+	it('DELETE to /api/admin/event/:event_id removes the event', done => {
 		request(app)
-			.delete(`/admin/event/${event._id}`)
+			.delete(`/api/admin/event/${event._id}`)
 			.set('admin-authorization', adminToken)
 			.end((err, res) => {
 				Event.findOne({ name: 'Test Event'})
@@ -187,9 +187,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('GET to /admin/meal/:meal_id returns a meal', done => {
+	it('GET to /api/admin/meal/:meal_id returns a meal', done => {
 		request(app)
-			.get(`/admin/meal/${meal1._id}`)
+			.get(`/api/admin/meal/${meal1._id}`)
 			.set('admin-authorization', adminToken)
 			.end((err, res) => {
 				assert(res.body.name === 'Food 1');
@@ -198,9 +198,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('GET to /admin/meal/all returns all meals', done => {
+	it('GET to /api/admin/meal/all returns all meals', done => {
 		request(app)
-			.get('/admin/meal/all')
+			.get('/api/admin/meal/all')
 			.set('admin-authorization', adminToken)
 			.end((err, res) => {
 				assert(res.body.length === 3);
@@ -208,9 +208,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('POST to /admin/meal creates a meal', done => {
+	it('POST to /api/admin/meal creates a meal', done => {
 		request(app)
-			.post('/admin/meal')
+			.post('/api/admin/meal')
 			.set('admin-authorization', adminToken)
 			.send({
 				name: 'Special Food',
@@ -228,10 +228,10 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('DELETE to /admin/meal/:meal_id deletes a meal', done => {
+	it('DELETE to /api/admin/meal/:meal_id deletes a meal', done => {
 		assert(meal1.name === 'Food 1');
 		request(app)
-			.delete(`/admin/meal/${meal1._id}`)
+			.delete(`/api/admin/meal/${meal1._id}`)
 			.set('admin-authorization', adminToken)
 			.end((err, res) => {
 				Meal.findById(res.body._id)
@@ -242,9 +242,9 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('POST to /admin/associate creates an associate', done => {
+	it('POST to /api/admin/associate creates an associate', done => {
 		request(app)
-			.post('/admin/associate')
+			.post('/api/admin/associate')
 			.set('admin-authorization', adminToken)
 			.send({
 				name: 'Adidas',
@@ -266,7 +266,7 @@ describe('Admin Controller', function(done) {
 			});
 	});
 
-	it('PUT to /admin/associate/associate_id updates an associate info', done => {
+	it('PUT to /api/admin/associate/associate_id updates an associate info', done => {
 		createAssociate(
 			adminToken,
 			'Adidass',
@@ -284,7 +284,7 @@ describe('Admin Controller', function(done) {
 			assert(asso.name === 'Adidass');
 			assert(asso.description === 'Key sponsor');
 			request(app)
-				.put(`/admin/associate/${asso._id}`)
+				.put(`/api/admin/associate/${asso._id}`)
 				.set('admin-authorization', adminToken)
 				.send({
 					name: 'Adidas',
@@ -308,7 +308,7 @@ describe('Admin Controller', function(done) {
 		});
 	});
 
-	it('DELETE to /admin/associate/associate_id deletes an associate', done => {
+	it('DELETE to /api/admin/associate/associate_id deletes an associate', done => {
 		createAssociate(
 			adminToken,
 			'Adidas',
@@ -327,7 +327,7 @@ describe('Admin Controller', function(done) {
 			.then(asso => {
 				assert(asso.name === 'Adidas');
 				request(app)
-					.delete(`/admin/associate/${asso._id}`)
+					.delete(`/api/admin/associate/${asso._id}`)
 					.set('admin-authorization', adminToken)
 					.end((err, res) => {
 						Associate.findById(asso._id)

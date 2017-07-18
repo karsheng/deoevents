@@ -94,7 +94,7 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('GET to /registration/:event_id retrieves registration info', done => {
+	it('GET to /api/registration/:event_id retrieves registration info', done => {
 		const orders = [
 			{ meal: meal1, quantity: 1 },
 			{ meal: meal2, quantity: 2 }
@@ -102,7 +102,7 @@ describe('User Controller', function(done) {
 		createRegistration(userToken, event._id, cat1, orders)
 		.then(reg => {
 			request(app)
-				.get(`/registration/${reg._id}`)
+				.get(`/api/registration/${reg._id}`)
 				.set('authorization', userToken)
 				.end((err, res) => {
 					assert(res.body.event.name === 'Event 1');
@@ -113,9 +113,9 @@ describe('User Controller', function(done) {
 		});
 	});
 
-	it('POST to /event/register/:event_id creates a registration', done => {
+	it('POST to /api/event/register/:event_id creates a registration', done => {
 		request(app)
-			.post(`/event/register/${event._id}`)
+			.post(`/api/event/register/${event._id}`)
 			.send({
 				category: cat1,
 				orders: [

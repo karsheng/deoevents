@@ -86,7 +86,7 @@ describe('Fake Payment Controller', function(done){
 		});
 	});
 
-	it('POST to /fakepayment/:registration_id', done => {
+	it('POST to /api/fakepayment/:registration_id', done => {
 		const orders = [
 			{ meal: meal1, quantity: 1 },
 			{ meal: meal2, quantity: 1 }
@@ -95,7 +95,7 @@ describe('Fake Payment Controller', function(done){
 			.then(reg => {
 				assert(reg.paid === false);
 				request(app)
-					.post(`/fakepayment/${reg._id}`)
+					.post(`/api/fakepayment/${reg._id}`)
 					.set('authorization', userToken)
 					.end((err, res) => {
 						assert(res.body.registration.toString() === reg._id.toString());

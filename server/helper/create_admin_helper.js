@@ -5,7 +5,7 @@ const app = require('../app');
 module.exports = (email, password) => {
 	return new Promise((resolve, reject) => {
 		request(app)
-			.post('/admin/create')
+			.post('/api/admin/create')
 			.send({
 				email,
 				password

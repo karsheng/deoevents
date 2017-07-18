@@ -87,7 +87,7 @@ xdescribe('PayPal Payment Controller', function(done){
 
 
 
-	it('POST to /paypal/create-payment/:registration_id creates payment and returns a paymentID', done => {
+	it('POST to /api/paypal/create-payment/:registration_id creates payment and returns a paymentID', done => {
 		const orders = [
 			{ meal: meal1, quantity: 1 },
 			{ meal: meal2, quantity: 1 }
@@ -95,7 +95,7 @@ xdescribe('PayPal Payment Controller', function(done){
 		createRegistration(userToken, event._id, cat1, orders)
 		.then(registration => {
 			request(app)
-				.post(`/paypal/create-payment/${registration._id}`)
+				.post(`/api/paypal/create-payment/${registration._id}`)
 				.set('authorization', userToken)
 				.end((err, res) => {
 					assert(res.body.paymentID === 'PAY-123ABC456DEF789');
@@ -104,7 +104,7 @@ xdescribe('PayPal Payment Controller', function(done){
 		});
 	});
 
-	it('POST to /paypal/execute-payment/:registration_id executes and saves payment and updates registrations and orders paid attribute to true', done => {
+	it('POST to /api/paypal/execute-payment/:registration_id executes and saves payment and updates registrations and orders paid attribute to true', done => {
 		const orders = [
 			{ meal: meal1, quantity: 1 },
 			{ meal: meal2, quantity: 1 }
@@ -115,7 +115,7 @@ xdescribe('PayPal Payment Controller', function(done){
 			createPayPalPayment(userToken, registration)
 			.then(paypalObj => {
 				request(app)
-					.post(`/paypal/execute-payment/${registration._id}`)
+					.post(`/api/paypal/execute-payment/${registration._id}`)
 					.set('authorization', userToken)
 					.send({
 						payment_id: paypalObj.paymentID, 

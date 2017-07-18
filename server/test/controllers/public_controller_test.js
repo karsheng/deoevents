@@ -102,9 +102,9 @@ describe('Public Controller', function(done) {
 		});
 	});
 
-	it('GET to /event/:event_id returns event info', done => {
+	it('GET to /api/event/:event_id returns event info', done => {
 		request(app)
-			.get(`/event/${event1._id}`)
+			.get(`/api/event/${event1._id}`)
 			.end((err, res) => {
 				assert(res.body.name === 'Event 1');
 				assert(res.body.meals[0].name === 'Food 1');
@@ -116,9 +116,9 @@ describe('Public Controller', function(done) {
 			});
 	});
 
-	it('GET to /event/open/all returns all open events', done => {
+	it('GET to /api/event/open/all returns all open events', done => {
 		request(app)
-			.get('/event/open/all')
+			.get('/api/event/open/all')
 			.end((err, res) => {
 				assert(res.body.length === 1);
 				assert(res.body[0].name === 'Event 2');
@@ -127,7 +127,7 @@ describe('Public Controller', function(done) {
 			});
 	});
 
-	it('GET to /associate/:associate_id returns an associate', done => {
+	it('GET to /api/associate/:associate_id returns an associate', done => {
 		createAssociate(
 			adminToken,
 			'Adidas',
@@ -143,7 +143,7 @@ describe('Public Controller', function(done) {
 		)
 		.then(asso => {
 			request(app)
-				.get(`/associate/${asso._id}`)
+				.get(`/api/associate/${asso._id}`)
 				.end((err, res) => {
 					assert(res.body.name === 'Adidas');
 					assert(res.body.address2 === 'Adidas City');
@@ -154,7 +154,7 @@ describe('Public Controller', function(done) {
 		});
 	});
 
-	it('GET to /associate/all returns all associate', done => {
+	it('GET to /api/associate/all returns all associate', done => {
 		Promise.all([
 			createAssociate(
 				adminToken,
@@ -185,7 +185,7 @@ describe('Public Controller', function(done) {
 		])
 		.then(associates => {
 			request(app)
-				.get('/associate/all')
+				.get('/api/associate/all')
 				.end((err, res) => {
 					assert(res.body.length === 2);
 					assert(res.body[0].name === 'Adidas');

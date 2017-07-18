@@ -4,7 +4,7 @@ const app = require('../app');
 module.exports = (token, name) => {
 	return new Promise((resolve, reject) => {
 		request(app)
-			.post('/admin/event')
+			.post('/api/admin/event')
 			.set('admin-authorization', token)
 			.send({ name })
 			.end((err, res) => {

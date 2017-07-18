@@ -133,7 +133,7 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user age does not fall within allowable age range', done => {
 		request(app)
-			.post(`/event/register/${event1._id}`)
+			.post(`/api/event/register/${event1._id}`)
 			.set('authorization', userToken1)
 			.send({
 				category: cat1
@@ -148,7 +148,7 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user gender does not match category gender requirement', done => {
 		request(app)
-			.post(`/event/register/${event1._id}`)
+			.post(`/api/event/register/${event1._id}`)
 			.set('authorization', userToken1)
 			.send({
 				category: cat2
@@ -165,7 +165,7 @@ describe('Registration Rules', function(done) {
 		createRegistration(userToken1, event1._id, cat3)
 		.then(reg => {
 			request(app)
-				.post(`/event/register/${event1._id}`)
+				.post(`/api/event/register/${event1._id}`)
 				.set('authorization', userToken1)
 				.send({
 					category: cat6
@@ -189,7 +189,7 @@ describe('Registration Rules', function(done) {
 				executePayPalPayment(userToken1, registration, paypalObj.paymentID, 'payer_id')
 				.then(payment => {
 					request(app)
-						.post(`/event/register/${event1._id}`)
+						.post(`/api/event/register/${event1._id}`)
 						.set('authorization', userToken2)
 						.send({
 							category: cat4
@@ -205,7 +205,7 @@ describe('Registration Rules', function(done) {
 
 	it('Returns error if user tries to register for an event that is already closed', done => {
 		request(app)
-			.post(`/event/register/${event2._id}`)
+			.post(`/api/event/register/${event2._id}`)
 			.set('authorization', userToken2)
 			.send({ category: cat5 })
 			.end((err, res) => {

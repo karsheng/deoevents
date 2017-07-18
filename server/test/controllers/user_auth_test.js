@@ -17,10 +17,10 @@ describe('User Auth Controller', function(done){
 		});
 	});
 
-	it('POST to /signup creates a user', done => {
+	it('POST to /api/signup creates a user', done => {
 		this.timeout(15000);
 		request(app)
-			.post('/signup')
+			.post('/api/signup')
 			.send({
 				name: 'Lee Kar Sheng',
 				email: 'karshenglee@gmail.com',
@@ -42,9 +42,9 @@ describe('User Auth Controller', function(done){
 			});
 	});
 
-	it('POST to /signin signs in a user and return a token', done => {
+	it('POST to /api/signin signs in a user and return a token', done => {
 		request(app)
-			.post('/signup')
+			.post('/api/signup')
 			.send({
 				name: 'Lee Kar Sheng',
 				email: 'karsheng_88@hotmail.com',
@@ -57,7 +57,7 @@ describe('User Auth Controller', function(done){
 			})
 			.end((err, res) => {
 				request(app)
-					.post('/signin')			
+					.post('/api/signin')			
 					.send({
 						email: 'karsheng_88@hotmail.com',
 						password: 'qwerty123'
@@ -69,7 +69,7 @@ describe('User Auth Controller', function(done){
 			});
 	});
 
-	it('PUT to /user/email updates the user email', done => {
+	it('PUT to /api/user/email updates the user email', done => {
 		createUser(
 			'Gavin Belson',
 			'gavin@hooli.com',
@@ -85,7 +85,7 @@ describe('User Auth Controller', function(done){
 		)
 		.then(token => {
 			request(app)
-				.put('/user/email')
+				.put('/api/user/email')
 				.set('authorization', token)
 				.send({ email: 'gavin@gmail.com'})
 				.end((err, res) => {
@@ -99,7 +99,7 @@ describe('User Auth Controller', function(done){
 		});
 	});
 
-	it('POST to /user/password/change changes the user password', done => {
+	it('POST to /api/user/password/change changes the user password', done => {
 		createUser(
 			'Gavin Belson',
 			'gavin@hooli.com',
@@ -115,7 +115,7 @@ describe('User Auth Controller', function(done){
 		)
 		.then(token => {
 			request(app)
-				.post('/user/password/change')
+				.post('/api/user/password/change')
 				.set('authorization', token)
 				.send({
 					oldPassword: 'qwerty123',
@@ -124,7 +124,7 @@ describe('User Auth Controller', function(done){
 				})
 				.end((err, res) => {
 					request(app)
-						.post('/signin')
+						.post('/api/signin')
 						.send({
 							email: 'gavin@hooli.com',
 							password: 'hellothere123'
@@ -137,7 +137,7 @@ describe('User Auth Controller', function(done){
 		});
 	});
 
-	it('GET to /profile returns profile of the user', done => {
+	it('GET to /api/profile returns profile of the user', done => {
 		createUser(
 			'Gavin Belson',
 			'gavin@hooli.com',
@@ -153,7 +153,7 @@ describe('User Auth Controller', function(done){
 		)
 		.then(token => {
 			request(app)
-				.get('/profile')
+				.get('/api/profile')
 				.set('authorization', token)
 				.end((err, res) => {
 					assert(res.body.name === 'Gavin Belson');
@@ -166,7 +166,7 @@ describe('User Auth Controller', function(done){
 		});
 	});
 
-	it('PUT to /profile updates the profile of the user', done => {
+	it('PUT to /api/profile updates the profile of the user', done => {
 		createUser(
 			'Gavin Belson',
 			'gavin@hooli.com',
@@ -182,7 +182,7 @@ describe('User Auth Controller', function(done){
 		)
 		.then(token => {
 			request(app)
-				.put('/profile')
+				.put('/api/profile')
 				.set('authorization', token)
 				.send({
 					name: 'Gavin Smelson',

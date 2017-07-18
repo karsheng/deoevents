@@ -8,9 +8,9 @@ describe('Admin Auth Controller', function(done) {
 	this.timeout(20000);
 	var adminToken;
 
-	it('/POST to /admin/create creates an admin', done => {
+	it('/POST to /api/admin/create creates an admin', done => {
 		request(app)
-			.post('/admin/create')
+			.post('/api/admin/create')
 			.send({
 				email: 'karshenglee@gmail.com',
 				password: 'Admin1!2@3#'
@@ -21,16 +21,16 @@ describe('Admin Auth Controller', function(done) {
 			});
 	});
 
-	it('/POST to /admin/signin signs in an admin', done => {
+	it('/POST to /api/admin/signin signs in an admin', done => {
 		request(app)
-			.post('/admin/create')
+			.post('/api/admin/create')
 			.send({
 				email: 'karshenglee@gmail.com',
 				password: 'Admin1!2@3#'
 			})
 			.end((err, res) => {
 				request(app)
-					.post('/admin/signin')
+					.post('/api/admin/signin')
 					.send({
 						email: 'karshenglee@gmail.com',
 						password: 'Admin1!2@3#'

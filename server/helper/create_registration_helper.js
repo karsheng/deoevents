@@ -4,7 +4,7 @@ const app = require('../app');
 module.exports = (token, event_id, category, orders) => {
 	return new Promise((resolve, reject) => {
 		request(app)
-			.post(`/event/register/${event_id}`)
+			.post(`/api/event/register/${event_id}`)
 			.send({
 				category,
 				orders
