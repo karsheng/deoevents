@@ -8,7 +8,7 @@ import {
 export function fetchEvents() {
 
 	return (dispatch) => {
-		axios.get(`${ROOT_URL}/event/open/all`)
+		axios.get(`${ROOT_URL}/api/event/open/all`)
 		.then(response => {
 			const events = response.data;
 
@@ -28,7 +28,7 @@ export function fetchEvents() {
 export function fetchEvent(event_id, cb) {
 
 	return (dispatch) => {
-		axios.get(`${ROOT_URL}/event/${event_id}`)
+		axios.get(`${ROOT_URL}/api/event/${event_id}`)
 		.then(response => {
 			const event = response.data;
 			dispatch({

@@ -64,7 +64,7 @@ export function createRegistration({ event, category, orders }, cb) {
   };
 	return function(dispatch) {
 		axios.post(
-			`${ROOT_URL}/event/register/${event._id}`,
+			`${ROOT_URL}/api/event/register/${event._id}`,
 			{ category, orders },
 			config
 		)
@@ -85,7 +85,7 @@ export function fetchRegistrationInfo(registration_id, cb) {
   };
 	return function(dispatch) {
 		axios.get(
-			`${ROOT_URL}/registration/${registration_id}`,
+			`${ROOT_URL}/api/registration/${registration_id}`,
 			config
 		)
 		.then(response => {

@@ -11,11 +11,11 @@ import {
 export function signinUser({ email, password }, cb) {
 
 	return function(dispatch) {
-		axios.post(`${ROOT_URL}/signin`, { email, password })
+		axios.post(`${ROOT_URL}/api/signin`, { email, password })
 			.then(response => {
 				localStorage.setItem('deotoken', response.data.token);
 				axios.get(
-					`${ROOT_URL}/profile`, 
+					`${ROOT_URL}/api/profile`, 
 					{
 						headers: 
 						{ 
@@ -56,11 +56,11 @@ export function authError(error) {
 export function signupUser(formProps, cb) {
 	return function(dispatch) {
 
-		axios.post(`${ROOT_URL}/signup`, formProps)
+		axios.post(`${ROOT_URL}/api/signup`, formProps)
 			.then(response => {
 				localStorage.setItem('deotoken', response.data.token);
 				axios.get(
-					`${ROOT_URL}/profile`, 
+					`${ROOT_URL}/api/profile`, 
 					{
 						headers: 
 						{ 
@@ -99,7 +99,7 @@ export function fetchUserInfo() {
 	if (token) {
 		return function(dispatch) {
 			axios.get(
-				`${ROOT_URL}/profile`,
+				`${ROOT_URL}/api/profile`,
 				{
 					headers:
 					{

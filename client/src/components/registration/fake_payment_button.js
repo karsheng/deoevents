@@ -14,7 +14,7 @@ class FakePaymentButton extends Component {
 	  };
 
 		axios.post(
-			`${ROOT_URL}/fakepayment/${regId}`,
+			`${ROOT_URL}/api/fakepayment/${regId}`,
 			null,
 			config
 		)

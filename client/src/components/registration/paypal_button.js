@@ -6,8 +6,8 @@ import { ROOT_URL } from '../../constants';
 class PayPalButton extends Component {
 	render() {
 		const Btn = paypal.Button.driver('react', {React, ReactDOM});
-		const CREATE_PAYMENT_URL = `${ROOT_URL}/paypal/create-payment/${this.props.regId}`;
-		const EXECUTE_PAYMENT_URL = `${ROOT_URL}/paypal/execute-payment/${this.props.regId}`;
+		const CREATE_PAYMENT_URL = `${ROOT_URL}/api/paypal/create-payment/${this.props.regId}`;
+		const EXECUTE_PAYMENT_URL = `${ROOT_URL}/api/paypal/execute-payment/${this.props.regId}`;
 		const token = localStorage.getItem('deotoken');
 
 		let client = {

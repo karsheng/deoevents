@@ -27,7 +27,7 @@ if (token) {
     headers: { authorization: token }
   };
   axios.get(
-    `${ROOT_URL}/profile`, 
+    `${ROOT_URL}/api/profile`, 
     config
   )
   .then(response => {
